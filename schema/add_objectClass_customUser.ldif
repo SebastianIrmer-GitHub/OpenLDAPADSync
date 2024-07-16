@@ -1,0 +1,15 @@
+dn: cn={4}userattributes,cn=schema,cn=config
+changetype: modify
+replace: olcObjectClasses
+olcObjectClasses: (userOCs:1 NAME 'userAttributes' DESC 'Object class for custom user attributes' SUP top AUXILIARY Must ( userId ) )
+olcObjectClasses: (userOCs:2 NAME 'customUser' DESC 'Extended object class for custom user attributes' SUP inetOrgPerson STRUCTURAL MUST ( cn $ sn $ uid $ employeeID ) )
+
+dn: cn={4}userattributes,cn=schema,cn=config
+changetype: add
+replace: olcAttributeType
+olcObjectClasses: (userOCs:1 NAME 'userAttributes' DESC 'Object class for custom user attributes' SUP top AUXILIARY Must ( userId ) )
+
+dn: cn={4}userattributes,cn=schema,cn=config
+changetype: modify
+add: olcAttributeTypes
+olcAttributeTypes: ( userAttributes:2 NAME 'employeeID' DESC 'Employee ID' EQUALITY caseIgnoreMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )

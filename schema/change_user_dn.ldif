@@ -1,0 +1,4 @@
+dn: cn=John  Doe,ou=Domain Users,dc=imed-ldap,dc=uni-magdeburg,dc=de
+changetype: modrdn
+newrdn: uid=jdoe
+deleteoldrdn: 0

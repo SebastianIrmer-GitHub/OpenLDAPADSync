@@ -1,0 +1,9 @@
+ldap:
+  server: "ldap://openldap.krb.uni-magdeburg.de"
+  user: "cn=admin,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de"
+  password: "Abc1234"
+  search_base: "dc=openldap,dc=krb,dc=uni-magdeburg,dc=de"
+  search_filter: "(objectClass=domainAccount)"
+  attributes: ["userAccountControl", "accountExpires", "uid", "cn"]
+  domain: "KRB"
+  keytab: "admin.keytab"

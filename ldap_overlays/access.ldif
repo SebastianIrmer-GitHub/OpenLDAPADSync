@@ -1,0 +1,39 @@
+# sudo nano /etc/apparmor.d/usr.sbin.slapd
+
+# /var/lib/openldap-data/* rw,
+
+# sudo apparmor_parser -r /etc/apparmor.d/usr.sbin.slapd
+
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: add
+objectClass: olcDatabaseConfig
+objectClass: olcMdbConfig
+olcDatabase: {2}mdb
+olcDbDirectory: /var/lib/openldap-data/
+olcSuffix: cn=accesslog
+olcRootDN: cn=admin,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+# PASSWORD HERE olcRootPw
+olcDbIndex: default eq
+olcDbIndex: entryCSN,objectClass,reqEnd,reqResult,reqStart
+
+dn: cn=module{0},cn=config 
+objectClass: olcModuleList 
+cn: module{0} 
+olcModuleLoad: accesslog.so
+
+dn: olcOverlay=accesslog,olcDatabase={2}mdb,cn=config
+changetype: add
+objectClass: olcOverlayConfig
+objectClass: olcAccessLogConfig
+olcOverlay: accesslog
+olcAccessLogDB: cn=accesslog
+olcAccessLogOps: all 
+olcAccessLogSuccess: TRUE
+olcAccessLogOld: cn=accesslog,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+olcAccessLogPurge: 7+00:00 01+00:00
+
+dn: olcOverlay={2}accesslog,olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccessLogOps
+olcAccessLogOps: all 

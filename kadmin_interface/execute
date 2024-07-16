@@ -1,0 +1,22 @@
+gcc -I/usr/include/heimdal -L/usr/lib/x86_64-linux-gnu/heimdal -L/usr/lib/x86_64-linux-gnu -shared -o libkadmin_interface.so -fPIC -g kadmin_interface.c -lkadm5clnt -lkrb5 -lasn1 -lcom_err -lroken
+gcc -I/usr/include/heimdal -L/usr/lib/x86_64-linux-gnu/heimdal -L/usr/lib/x86_64-linux-gnu -c -o kadmin_interface.o -fPIC -g kadmin_interface.c
+
+# sudo apt-get install heimdal-dev
+
+python3 -m venv myenv
+source myenv/bin/activate
+
+# Navigate to your project directory
+cd /path/to/your/project
+
+# Clean previous build artifacts
+rm -rf build dist *.egg-info
+
+# Ensure directory permissions
+chmod -R u+w .
+
+# Run setup.py to generate egg-info
+python setup.py egg_info
+
+# Install the package using pip
+pip install .

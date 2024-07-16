@@ -1,0 +1,19 @@
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * filter=(userAccountControl=2) by * none
+olcAccess: {1}to attrs=userPassword by self write by anonymous auth by * none
+olcAccess: {2}to attrs=shadowLastChange by self write by * read
+olcAccess: {3}to dn.subtree="ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" attrs=objectClass
+  by dn.exact="uid=testuser123,cn=krb,cn=gssapi,cn=auth" read
+  by * none
+olcAccess: {4}to * by * read
+
+dn: olcOverlay=memberof,olcDatabase={2}mdb,cn=config
+objectClass: olcOverlayConfig
+objectClass: olcMemberOf
+olcOverlay: memberof
+olcMemberOfDangling: ignore
+olcMemberOfRefInt: TRUE
+
+{3} to restrict access to automounts

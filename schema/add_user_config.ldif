@@ -1,0 +1,73 @@
+dn: cn={4}userattributes,cn=schema,cn=config
+changetype: modify
+add: olcAttributeTypes
+olcAttributeTypes: ( userAttributes:1 NAME 'gender' DESC 'Gender of the person' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+dn: cn={4}userattributes,cn=schema,cn=config
+changetype: modify
+add: olcAttributeTypes
+olcAttributeTypes: ( userAttributes:2 NAME 'userAccountControl' DESC 'Account control settings for the user' EQUALITY integerMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 SINGLE-VALUE )
+
+dn: cn={4}userattributes,cn=schema,cn=config
+changetype: modify
+add: olcAttributeTypes
+olcAttributeTypes: ( userAttributes:5 NAME 'userStatus' DESC 'Status settings for the user' EQUALITY integerMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 SINGLE-VALUE )
+
+dn: cn={4}userattributes,cn=schema,cn=config
+changetype: modify
+replace: olcAttributeTypes
+olcAttributeTypes: ( userAttributes:1 NAME 'gender' DESC 'Gender of the person' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: ( userAttributes:2 NAME 'userAccountControl' DESC 'Account control settings for the user' EQUALITY integerMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 SINGLE-VALUE )
+olcAttributeTypes: ( userAttributes:3 NAME 'userStatus' DESC 'Status settings for the user' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: ( userAttributes:4 NAME 'userStatusValidFrom' DESC 'Status settings for the user' EQUALITY generalizedTimeMatch ORDERING generalizedTimeOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 SINGLE-VALUE )
+olcAttributeTypes: ( userAttributes:5 NAME 'employeeID' DESC 'Status settings for the user' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+
+
+dn: cn={4}userattributes,cn=schema,cn=config
+changetype: modify
+replace: olcObjectClasses
+olcObjectClasses: (userOCs:1 NAME 'userAttributes' DESC 'Object class for custom user attributes' SUP top AUXILIARY Must ( userId ) )
+olcObjectClasses: (userOCs:2 NAME 'customUser' DESC 'Extended object class for custom user attributes' SUP inetOrgPerson STRUCTURAL MAY ( userAccountControl ) MUST ( cn $ sn $ givenName $ uid $ employeeID $ gender $ userStatus $ userStatusValidFrom ) )
+
+dn: cn={4}userattributes,cn=schema,cn=config
+changetype: modify
+replace: olcObjectClasses
+olcObjectClasses: (userOCs:1 NAME 'userAttributes' DESC 'Object class for custom user attributes' SUP top AUXILIARY Must ( userId ) )
+olcObjectClasses: (userOCs:2 NAME 'customUser' DESC 'Extended object class for custom user attributes' SUP inetOrgPerson STRUCTURAL MAY ( userAccountControl ) MUST ( cn $ sn $ givenName $ uid $ employeeID $ gender $ userStatus $ userStatusValidFrom ) )
+
+dn: cn={4}domainUser,cn=schema,cn=config
+changetype: modify
+replace: olcAttributeTypes
+olcAttributeTypes: ( domainUserAttrs:1 NAME 'gender' DESC 'Gender of the person' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: ( domainUserAttrs:2 NAME 'userAccountControl' DESC 'Account control settings for the user' EQUALITY integerMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 SINGLE-VALUE )
+olcAttributeTypes: ( domainUserAttrs:3 NAME 'userStatus' DESC 'Status settings for the user' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: ( domainUserAttrs:4 NAME 'userStatusValidFrom' DESC 'Status settings for the user' EQUALITY generalizedTimeMatch ORDERING generalizedTimeOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 SINGLE-VALUE )
+olcAttributeTypes: ( domainUserAttrs:5 NAME 'employeeID' DESC 'Status settings for the user' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
+olcAttributeTypes: ( 1.3.6.1.4.1.4203.666.1.90 NAME 'accountExpires' DESC 'Account expiration time in 100-nanosecond intervals since January 1, 1601 (UTC)' EQUALITY integerMatch ORDERING integerOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 )
+olcAttributeTypes: ( domainUserAttrs:7 NAME 'pwdLastSet' DESC 'Password last changed in generalized time format' EQUALITY generalizedTimeMatch ORDERING generalizedTimeOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 SINGLE-VALUE )
+
+
+dn: cn={4}domainUser,cn=schema,cn=config
+changetype: modify
+replace: olcObjectClasses
+olcObjectClasses: ( 1.3.6.1.4.1.57470.2.2.1 NAME 'domainAccount'
+  DESC 'A user/account/person in the organization'
+  SUP top STRUCTURAL
+  MUST ( cn $ sn $ uid $ employeeID $ gender $ userAccountControl $ userStatus $ userStatusValidFrom )
+  MAY ( 
+  audio $ host $ pwdLastSet $ businessCategory $ carLicense $ departmentNumber $ 
+  description $ destinationIndicator $ displayName $ accountExpires $
+  employeeID $ employeeType $ facsimileTelephoneNumber $ 
+  gecos $ gidNumber $ givenName $ homeDirectory $ homePhone $ 
+  homePostalAddress $ initials $ internationaliSDNNumber $ 
+  jpegPhoto $ l $ labeledURI $ loginShell $ 
+  mail $ manager $ mobile $ o $ ou $ pager $ photo $ 
+  physicalDeliveryOfficeName $ postalAddress $ postalCode $ 
+  postOfficeBox $ preferredDeliveryMethod $ 
+  preferredLanguage $ registeredAddress $ roomNumber $ 
+  secretary $ seeAlso $ shadowExpire $ shadowInactive $ 
+  shadowLastChange $ shadowMax $ shadowMin $ shadowWarning
+  $ st $ street $ telephoneNumber $ 
+  teletexTerminalIdentifier $ telexNumber $ title $ 
+  uidNumber $ userCertificate $ userPassword $ userPKCS12 $ 
+  userSMIMECertificate $ x121Address $ x500uniqueIdentifier ) )

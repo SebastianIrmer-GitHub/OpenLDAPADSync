@@ -1,0 +1,7 @@
+ldap:
+  server: "ldap://kerberosad.uni-magdeburg.de"
+  user: "cn=Administrator,cn=Users,dc=kerberosad,dc=uni-magdeburg,dc=de"
+  password: "Abc1234"
+  search_base: "dc=kerberosad,dc=uni-magdeburg,dc=de"
+  search_filter: "(objectClass=user)"
+  attributes: ["userAccountControl", "accountesExpires", "uid", "cn"]

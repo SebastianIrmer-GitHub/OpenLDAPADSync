@@ -1,0 +1,115 @@
+ldapadd -x -D cn=admin,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de -W <<EOF
+dn: uid=kdc-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de
+uid: kdc-service
+objectClass: account
+objectClass: simpleSecurityObject
+userPassword: {CRYPT}x
+description: Account used for the Kerberos KDC
+
+dn: uid=kadmin-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de
+uid: kadmin-service
+objectClass: account
+objectClass: simpleSecurityObject
+userPassword: {CRYPT}x
+description: Account used for the Kerberos Admin server
+EOF
+
+
+sudo kdb5_ldap_util -D cn=admin,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de create -subtrees dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de -r imed-kerberos.uni-magdeburg.de -s -H ldapi:///
+ldappasswd -x -D cn=admin,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de -W -S uid=kdc-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de
+ldappasswd -x -D cn=admin,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de -W -S uid=kadmin-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de
+
+ldapwhoami -x -D uid=kdc-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de -w Abc1234
+sudo kdb5_ldap_util -D cn=admin,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de stashsrvpw -f /etc/krb5kdc/service.keyfile uid=kdc-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de
+sudo kdb5_ldap_util -D cn=admin,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de stashsrvpw -f /etc/krb5kdc/service.keyfile uid=kadmin-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de
+
+sudo ldapmodify -Q -Y EXTERNAL -H ldapi:/// <<EOF
+dn: olcDatabase={1}mdb,cn=config
+add: olcAccess
+olcAccess: {2}to attrs=krbPrincipalKey
+  by anonymous auth
+  by dn.exact="uid=kdc-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de" read
+  by dn.exact="uid=kadmin-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de" write
+  by self write
+  by * none
+-
+add: olcAccess
+olcAccess: {3}to dn.subtree="cn=krbContainer,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de"
+  by dn.exact="uid=kdc-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de" read
+  by dn.exact="uid=kadmin-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de" write
+  by * none
+EOF
+
+sudo ldapmodify -Q -Y EXTERNAL -H ldapi:/// <<EOF
+dn: olcDatabase={1}mdb,cn=config
+add: olcAccess
+olcAccess: {4}to dn.subtree="ou=Domain Users,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de"
+  by dn.exact="uid=kdc-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de" read
+  by dn.exact="uid=kadmin-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de" write
+  by * break
+EOF
+
+[dbmodules]
+        openldap_ldapconf = {
+                db_library = kldap
+
+				# if either of these is false, then the ldap_kdc_dn needs to
+				# have write access
+				disable_last_success = true
+				disable_lockout  = true
+
+                # this object needs to have read rights on
+                # the realm container, principal container and realm sub-trees
+                ldap_kdc_dn = "uid=kdc-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de"
+
+                # this object needs to have read and write rights on
+                # the realm container, principal container and realm sub-trees
+                ldap_kadmind_dn = "uid=kadmin-service,dc=imed-ldap-kerb,dc=uni-magdeburg,dc=de"
+
+                ldap_service_password_file = /etc/krb5kdc/service.keyfile
+                ldap_servers = ldapi:///
+                ldap_conns_per_server = 5
+        }
+
+        addprinc -x dn=cn=krbtgt/IMED-UNI-MAGDEBURG.DE@imed-kerberos.uni-magdeburg.de,cn=users,dc=imed,dc=uni-magdeburg,dc=de krbtgt/IMED-UNI-MAGDEBURG.DE@imed-kerberos.uni-magdeburg.de
+addprinc -x dn=cn=krbtgt/IMED-UNI-MAGDEBURG.DE@imed-kerberos.uni-magdeburg.de,cn=users,dc=imed,dc=uni-magdeburg,dc=de krbtgt/IMED-UNI-MAGDEBURG.DE@imed-kerberos.uni-magdeburg.de
+set_password krbtgt/IMED-UNI-MAGDEBURG.DE@imed-kerberos.uni-magdeburg.de
+
+
+addprinc -randkey krbtgt/IMED-UNI-MAGDEBURG.DE@imed-kerberos.uni-magdeburg.de
+addprinc -randkey krbtgt/imed-kerberos.uni-magdeburg.de@IMED-UNI-MAGDEBURG.DE
+
+ktadd -k /etc/krb5.keytab krbtgt/IMED-UNI-MAGDEBURG.DE@imed-kerberos.uni-magdeburg.de
+ktadd -k /etc/krb5.keytab krbtgt/imed-kerberos.uni-magdeburg.de@IMED-UNI-MAGDEBURG.DE
+
+
+
+[domain_realm]
+    .kerberos.uni-magdeburg.de = KERBEROS.UNI-MAGDEBURG.DE
+    kerberos.uni-magdeburg.de= KERBEROS.UNI-MAGDEBURG.DE
+[dbdefaults]
+    ldap_kerberos_container_dn = cn=krbContainer,dc=openldap,dc=kerberos,dc=uni-magdeburg,dc=de
+[dbmodules]
+    openldap_ldapconf = {
+        db_library = kldap
+        disable_last_success = true
+        disable_lockout  = true
+        acl_file = /etc/krb5kdc/kadm5.acl
+        key_stash_file = /etc/krb5kdc/stash
+        ldap_kdc_dn = "cn=kdc-service,ou=accounts,dc=openldap,dc=kerberos,dc=uni-magdeburg,dc=de"
+        ldap_kadmind_dn = "cn=kadmin-service,ou=accounts,dc=openldap,dc=kerberos,dc=uni-magdeburg,dc=de"
+        ldap_service_password_file = /etc/krb5kdc/service.keyfile
+        ldap_servers = ldap://openldap.kerberos.uni-magdeburg.de
+        ldap_conns_per_server = 5
+        }
+
+
+
+addprinc -randkey ldap/openldap.kerberos.uni-magdeburg.de@KERBEROS.UNI-MAGDEBURG.DE
+ktadd -k /etc/ldap/ldap.keytab ldap/openldap.kerberos.uni-magdeburg.de@KERBEROS.UNI-MAGDEBURG.DE
+
+addprinc -randkey host/openldap.kerberos.uni-magdeburg.de@KERBEROS.UNI-MAGDEBURG.DE
+ktadd -k /etc/ldap/ldap.keytab host/openldap.kerberos.uni-magdeburg.de@KERBEROS.UNI-MAGDEBURG.DE
+ktadd -k /etc/krb5.keytab host/openldap.kerberos.uni-magdeburg.de@KERBEROS.UNI-MAGDEBURG.DE
+
+exit
