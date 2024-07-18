@@ -1,19 +1,51 @@
 dn: olcDatabase={2}mdb,cn=config
 changetype: modify
 replace: olcAccess
-olcAccess: {0}to * filter=(userAccountControl=2) by * none
+olcAccess: {0}to * by dn.exact="cn=admin,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" manage by dn="cn=ldapbinduser,ou=Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" read by * break
 olcAccess: {1}to attrs=userPassword by self write by anonymous auth by * none
 olcAccess: {2}to attrs=shadowLastChange by self write by * read
+olcAccess: {3}to * filter=(userAccountControl=512) by self read by anonymous auth
+
+
+
+!!!
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {2}to * by dn.exact="cn=admin,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" manage by dn="uid=ldapbinduser,ou=Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" read by * break
+olcAccess: {1}to * filter=(!(userAccountControl=2)) by anonymous auth by self read
+olcAccess: {4}to dn.subtree="ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" filter=(!(userAccountControl=2)) by * read 
+
+dn: cn=config
+changetype: modify
+replace: olcAuthzRegexp
+olcAuthzRegexp: {0}"uid=([^,]+),cn=krb,cn=GSSAPI,cn=auth" "ldap:///dc=openldap,dc=krb,dc=uni-magdeburg,dc=de??sub?(uid=$1)"
+
+!!!
+
+# uid=testuser123,ou=domain users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+# uid=testuser123,ou=domain users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
 olcAccess: {3}to dn.subtree="ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" attrs=objectClass
   by dn.exact="uid=testuser123,cn=krb,cn=gssapi,cn=auth" read
   by * none
-olcAccess: {4}to * by * read
 
-dn: olcOverlay=memberof,olcDatabase={2}mdb,cn=config
-objectClass: olcOverlayConfig
-objectClass: olcMemberOf
-olcOverlay: memberof
-olcMemberOfDangling: ignore
-olcMemberOfRefInt: TRUE
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * by dn.exact="cn=admin,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" manage by dn="cn=ldapbinduser,ou=Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" read by * break
+olcAccess: {1}to attrs=userPassword by self write by anonymous auth by * none
+olcAccess: {2}to attrs=shadowLastChange by self write by * read
+olcAccess: {3}to dn.subtree="ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" filter=(userAccountControl=512) by self read
+
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * filter=(userAccountControl=2) by * none
+olcAccess: {1}to attrs=userPassword by self write by anonymous auth by * none
+olcAccess: {2}to attrs=shadowLastChange by self write by * read
+olcAccess: {3}to * by * read
 
 {3} to restrict access to automounts
