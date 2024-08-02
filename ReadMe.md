@@ -38,7 +38,19 @@ Ein Onboarding Skirpt kann ausgeführt werden durch folgende Befehle ausgeführt
 
 Die DNS Einträge müssen zuerst erstellt werden. Dafür kann SRV benutzt werden. Dabei sind die Skripte dafür jedoch nicht speziell erstellt. 
 
-**Bevor die Skripte ausgeführt werden können, müssen diese den DNS Einträgen angepasst werden.**
+!!!
+**Während dieses Dokument geschrieben wurde, ist der LSC-Server unereichbar geworden.** 
+!!!
+
+Alternative Installation:
+**Dateien aus lsc-install auf dem Server speichern**
+
+```s
+cat lsc_2.1.6-1_all.deb.part-* > lsc_2.1.6-1_all.deb
+sudo dpkg -i lsc_2.1.6-1_all.deb
+```
+
+**Die DNS-Einträge müssen auf dem DNS-Server existieren**
 
 **Der Ablauf sollte wie folgt aussehen:**
 
@@ -56,6 +68,7 @@ chmod +x script.sh
 ### 4.1.2 OpenLDAP und Active Directory 
 
 #### OpenLDAP Installation
+
 
 Ein OpenLDAP Server kann durch das OpenLDAP Onboarding Skript aus `onboarding/cross-realm` installiert werden. 
 
@@ -213,7 +226,7 @@ Damit die Synchronisation vollständig funktionieren kann, müssen die Attribute
 Dann entweder den Active Directory Domain Service Dienst neustarten oder den Server neustarten. 
 
 ## Synchronisation 
-
+Für die Synchronisation wird LSC-Projekt verwendet. https://lsc-project.org/ Alternativ: https://lsc.readthedocs.io/en/latest/index.html
 
 ### Ausführen der Synchronisationsskripte
 
