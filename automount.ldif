@@ -1,0 +1,92 @@
+version: 1
+
+dn: ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: automount
+ouID: 3
+ouParentID: 0
+
+dn: ou=auto_home,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: automountMap
+objectClass: top
+ou: auto_home
+
+dn: ou=auto.master,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: automountMap
+objectClass: top
+ou: auto.master
+
+dn: ou=auto_master,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: automountMap
+objectClass: top
+ou: auto_master
+
+dn: cn=123,ou=auto_home,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=
+ de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=smbfs ://kerberosad.kerberosad.uni-magdeburg.d
+ e/Shared
+cn: 123
+
+dn: cn=321,ou=auto_home,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=
+ de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=smbfs ://kerberosad.kerberosad.uni-magdeburg.d
+ e/NotShared
+cn: 321
+
+dn: ou=auto.test,ou=auto.master,ou=automount,dc=openldap,dc=krb,dc=uni-magde
+ burg,dc=de
+objectClass: automountMap
+objectClass: top
+ou: auto.test
+
+dn: cn=/test,ou=auto.test,ou=auto.master,ou=automount,dc=openldap,dc=krb,dc=
+ uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: auto.test
+cn: /test
+
+dn: cn=/shares,ou=auto.test,ou=auto.master,ou=automount,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: auto.test
+cn: /shares
+
+dn: cn=home,cn=/test,ou=auto.test,ou=auto.master,ou=automount,dc=openldap,dc
+ =krb,dc=uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=cifs,rw,noperm,cruid=$UID,sec=krb5i       ://k
+ erberosad.kerberosad.uni-magdeburg.de/HomeFolders
+cn: home
+
+dn: cn=pub,cn=/shares,ou=auto.test,ou=auto.master,ou=automount,dc=openldap,d
+ c=krb,dc=uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=cifs,rw,noperm,cruid=$UID,sec=krb5i       ://k
+ erberosad.kerberosad.uni-magdeburg.de/Shared
+cn: pub
+
+dn: cn=notshared,cn=/shares,ou=auto.test,ou=auto.master,ou=automount,dc=open
+ ldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=cifs,rw,noperm,cruid=$UID,sec=krb5i       ://k
+ erberosad.kerberosad.uni-magdeburg.de/NotShared
+cn: notshared
+
+dn: cn=/test,ou=auto_master,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg
+ ,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: auto_home
+cn: /test
+

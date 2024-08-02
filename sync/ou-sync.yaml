@@ -1,0 +1,10 @@
+source:
+  server_uri: 'ldap://openldap.heimdal.uni-magdeburg.de:389'
+  bind_dn: 'cn=admin,dc=openldap,dc=heimdal,dc=uni-magdeburg,dc=de'
+  bind_password: 'Abc1234'
+  search_base: "dc=openldap,dc=heimdal,dc=uni-magdeburg,dc=de"
+target:
+  server_uri: 'ldap://kerberos.uni-magdeburg.de:389'
+  bind_dn: 'CN=Administrator,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de'
+  bind_password: 'Abc1234'
+  search_base: "dc=kerberos,dc=uni-magdeburg,dc=de"

@@ -1,39 +1,35 @@
 # sudo nano /etc/apparmor.d/usr.sbin.slapd
 
-# /var/lib/openldap-data/* rw,
+# /var/lib/ldap/accesslog/* rw,
 
 # sudo apparmor_parser -r /etc/apparmor.d/usr.sbin.slapd
 
+dn: cn=module{0},cn=config
+changetype: modify
+add: olcModuleLoad
+olcModuleLoad: accesslog.la
 
 dn: olcDatabase={2}mdb,cn=config
-changetype: add
 objectClass: olcDatabaseConfig
 objectClass: olcMdbConfig
-olcDatabase: {2}mdb
-olcDbDirectory: /var/lib/openldap-data/
+olcDatabase: mdb
+olcDbDirectory: /var/lib/ldap/accesslog
 olcSuffix: cn=accesslog
-olcRootDN: cn=admin,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
-# PASSWORD HERE olcRootPw
+olcRootDN: cn=admin,cn=accesslog
+olcRootPW: auditor_password
 olcDbIndex: default eq
 olcDbIndex: entryCSN,objectClass,reqEnd,reqResult,reqStart
 
-dn: cn=module{0},cn=config 
-objectClass: olcModuleList 
-cn: module{0} 
-olcModuleLoad: accesslog.so
-
-dn: olcOverlay=accesslog,olcDatabase={2}mdb,cn=config
+dn: olcOverlay=accesslog,olcDatabase={1}mdb,cn=config
 changetype: add
 objectClass: olcOverlayConfig
 objectClass: olcAccessLogConfig
 olcOverlay: accesslog
 olcAccessLogDB: cn=accesslog
 olcAccessLogOps: all 
-olcAccessLogSuccess: TRUE
-olcAccessLogOld: cn=accesslog,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
-olcAccessLogPurge: 7+00:00 01+00:00
+olcAccessLogSuccess: FALSE
+olcAccessLogOld: cn=accesslog,dc=client,dc=heimdal,dc=uni-magdeburg,dc=de
+olcAccessLogPurge: 1+00:00 01:00
 
-dn: olcOverlay={2}accesslog,olcDatabase={2}mdb,cn=config
-changetype: modify
-replace: olcAccessLogOps
-olcAccessLogOps: all 
+
+# ldapsearch -x -LLL -D "cn=admin,cn=accesslog" -w auditor_password -b "cn=accesslog" -s sub "(reqType=bind)"

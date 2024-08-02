@@ -1,0 +1,15 @@
+sudo apt-get install sasl2-bin slapd ldap-utils
+
+sudo mkdir -p /tmp/ldap
+
+sudo slaptest -f createschema.conf -F /tmp/ldap
+
+sudo cp /tmp/ldap/cn\=config/cn=schema/cn={4}customgp.ldif /etc/ldap/slapd.d/cn\=config/cn=schema
+sudo cp /tmp/ldap/cn\=config/cn=schema/cn={5}customou.ldif /etc/ldap/slapd.d/cn\=config/cn=schema
+sudo cp /tmp/ldap/cn\=config/cn=schema/cn={6}domainuser.ldif /etc/ldap/slapd.d/cn\=config/cn=schema
+
+sudo chown openldap:openldap /etc/ldap/slapd.d/cn\=config/cn=schema/cn={4}customgp.ldif
+sudo chown openldap:openldap /etc/ldap/slapd.d/cn\=config/cn=schema/cn={5}customou.ldif
+sudo chown openldap:openldap /etc/ldap/slapd.d/cn\=config/cn=schema/cn={6}domainuser.ldif
+
+sudo systemctl restart slapd

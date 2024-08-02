@@ -1,0 +1,26 @@
+mech_list: gssapi digest-md5 cram-md5 external
+keytab: /etc/ldap/ldap.keytab 
+
+SASL_MECH GSSAPI
+SASL_REALM HEIMDAL.UNI-MAGDEBRG.DE
+
+netdom trust KERBEROS.UNI-MAGDEBURG.DE /Domain: HEIMDAL.UNI-MAGDEBURG.DE /Realm /Add /PasswordT:“Abc1234“
+netdom trust HEIMDAL.UNI-MAGDEBURG.DE /Domain: KERBEROS.UNI-MAGDEBURG.DE /Realm /Add /PasswordT:“Abc1234“
+
+ext kadmin/hprop@KRB
+ext hprop/replica.krb.uni-magdeburg.de@KRB
+sudo hprop -k keytab replica.krb.uni-magdeburg.de
+
+unter /var/lib/heimdal-kdc/*
+
+Dann wird auf beiden Servern die /etc/heimdal-kdc/kdc.conf angepasst, sodass Port 88 und Port 754 offen sind, 88 für Authentifikation und 754 für die Replikation. Unter /etc/inetd.conf muss der hprop Dienst auskommentiert werden und dann kann durch einen Befehl repliziert werden. Die Keytab-Datei wird auf beiden Servern gespeichert. 
+
+sudo kadmin -l
+add -r --use-defaults HTTP/heimdal.krb.uni-magdeburg.de@KRB.
+ext -k /etc/httpd.keytab HTTP/heimdal.krb.uni-magdeburg.de@KRB.
+sudo chown www-data:www-data /etc/httpd.keytab
+sudo chmod 600 /etc/httpd.keytab 
+
+Die Unicode String Attribute die auf AD erstellt werden müssen sind orgUnitID, orgUnitParentID, uniqueGroupID, userStatus und gender. Weiterhin wird userStatusValidFrom mit GeneralizedTime erstellt. Danach müssen diese Attribute den Objektklassen zugeordnet werden. UserStatus und userStatusValidFrom werden user zugeordnet. Die Attribute orgUnitID, orgUnitParentID werden in organizationalUnit hinzugefügt und uniqueGroupID wird group hinzugefügt. Die Attribute können nicht verändert oder gelöscht werden. 
+
+Der letzte Teil, der betrachtet wurde, sind Gruppen. Gruppen wurden in OpenLDAP ähnlich Active Directory erstellt. Globale Gruppen können Mitglieder aus dem lokalen Bereich und anderen Bereichen der Gesamtstruktur enthalten, sind aber in universellen Gruppen nicht erlaubt. Lokale Gruppen beschränken sich auf Mitglieder aus dem lokalen Bereich und Standort. Universale Gruppen umfassen Mitglieder aus dem gesamten Forest, einschließlich anderer globaler und universeller Gruppen. wobei globale Gruppen Mitglieder aus anderen globalen Gruppen und Benutzerkonten im gesamten Forest haben können, lokale Gruppen auf Mitglieder aus ihrem Standort beschränkt sind und universale Gruppen Mitglieder aus dem gesamten Forest, einschließlich anderer globaler und universeller Gruppen, umfassen können. Es muss beachtet werden, dass Globale Gruppen nicht zu lokalen Gruppen verändert werden können, ohne diese vorher zu universellen Gruppen zu konvertieren. Um dem Grundschutz-Kompendium gerecht zu werden, sollten die erlaubten Werte für dieses Attribut eingeschränkt werden. Das kann durch das constraint Overlay eingestellt werden. 

@@ -1,0 +1,25 @@
+version: 1
+
+dn: dc=op,dc=uni-magdeburg,dc=de
+objectClass: dcObject
+objectClass: organization
+objectClass: top
+dc: op
+o: "Example Organization"
+
+dn: uid=testuser123,dc=op,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: s
+employeeID: s
+gender: s
+sn: s
+uid: testuser123
+userAccountControl: 512
+userStatus: 5
+userStatusValidFrom: 20240801205805.969Z
+
+dn: uid=testuser123,dc=op,dc=uni-magdeburg,dc=de
+changetype: modrdn
+newrdn: uid=testuser1
+deleteoldrdn: 1

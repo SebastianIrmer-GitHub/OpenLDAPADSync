@@ -67,7 +67,7 @@ int change_password_old(krb5_context context, krb5_principal principal, const ch
         krb5_free_principal(context, kpasswd_principal);
         krb5_free_data_contents(context, &result_code_string);
         krb5_free_data_contents(context, &result_string);
-        return ret ? ret : -1; // Use a negative value for non-krb5 errors
+        return ret ? ret : -1; 
     }
 
     // Free resources

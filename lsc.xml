@@ -1,0 +1,552 @@
+<?xml version="1.0" ?>
+<lsc xmlns="http://lsc-project.org/XSD/lsc-core-2.1.xsd" revision="0">
+    <connections>
+        <ldapConnection>
+            <name>ldap-OpenLDAP-conn</name>
+            <url>ldap://op.uni-magdeburg.de:389/dc=op,dc=uni-magdeburg,dc=de</url>
+            <username>cn=admin,dc=op,dc=uni-magdeburg,dc=de</username>
+            <password>Abc1234</password>
+            <authentication>SIMPLE</authentication>
+            <referral>IGNORE</referral>
+            <derefAliases>NEVER</derefAliases>
+            <version>VERSION_3</version>
+            <pageSize>5000</pageSize>
+            <factory>com.sun.jndi.ldap.LdapCtxFactory</factory>
+        </ldapConnection>
+        <ldapConnection>
+            <name>ldap-AD-conn</name>
+            <url>ldap://kerberos.uni-magdeburg.de:389/DC=kerberos,DC=uni-magdeburg,DC=de</url>
+            <username>CN=Administrator,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de</username>
+            <password>Abc1234</password>
+            <authentication>SIMPLE</authentication>
+            <referral>IGNORE</referral>
+            <derefAliases>NEVER</derefAliases>
+            <version>VERSION_3</version>
+            <pageSize>5000</pageSize>
+            <factory>com.sun.jndi.ldap.LdapCtxFactory</factory>
+            <recursiveDelete>true</recursiveDelete>
+        </ldapConnection>
+    </connections>
+    <tasks>
+        <task>
+            <name>syncOU</name>
+            <bean>org.lsc.beans.SimpleBean</bean>
+            <asyncLdapSourceService>
+                <name>ldap-src-OU-service</name>
+                <connection reference="ldap-OpenLDAP-conn" />
+                <baseDn>ou=Domain Users,dc=op,dc=uni-magdeburg,dc=de</baseDn>
+                <pivotAttributes>
+                    <string>ouID</string>
+                </pivotAttributes>
+                <fetchedAttributes>
+                    <string>ou</string>
+                    <string>ouID</string>
+                    <string>ouParentID</string>
+                    <string>description</string>
+                </fetchedAttributes>
+                <getAllFilter><![CDATA[(objectClass=organizationalUnit)]]></getAllFilter>
+                <getOneFilter><![CDATA[(&(objectClass=organizationalUnit)(ouID={ouID}))]]></getOneFilter>
+                <cleanFilter><![CDATA[(&(objectClass=organizationalUnit)(ouID={orgUnitID}))]]></cleanFilter>
+                <synchronizingAllWhenStarting>false</synchronizingAllWhenStarting>
+                <serverType>OpenLDAP</serverType>           
+            </asyncLdapSourceService>
+            <ldapDestinationService>
+                <name>ldap-dst-OU-service</name>
+                <connection reference="ldap-AD-conn" />
+                <baseDn>ou=Domain Users,DC=kerberos,DC=uni-magdeburg,DC=de</baseDn>
+                <pivotAttributes>
+                    <string>orgUnitID</string>
+                </pivotAttributes>
+                <fetchedAttributes>
+                    <string>ou</string>
+                    <string>orgUnitID</string>
+                    <string>orgUnitParentID</string>
+                    <string>objectclass</string>
+                    <string>description</string>
+                </fetchedAttributes>
+                <getAllFilter><![CDATA[(objectClass=organizationalUnit)]]></getAllFilter>
+                <getOneFilter><![CDATA[(&(objectClass=organizationalUnit)(orgUnitID={ouID}))]]></getOneFilter>
+            </ldapDestinationService>
+            <propertiesBasedSyncOptions>
+                <mainIdentifier>js:removeBaseDN(srcBean.getMainIdentifier(), "dc=op,dc=uni-magdeburg,dc=de", "DC=kerberos,DC=uni-magdeburg,DC=de")</mainIdentifier>
+                <defaultDelimiter>;</defaultDelimiter>
+                <defaultPolicy>FORCE</defaultPolicy>
+                <conditions>
+                    <create>true</create>
+                    <update>true</update>
+                    <changeId>true</changeId>
+                </conditions>
+                 <dataset>
+                    <name>objectclass</name>
+                    <policy>KEEP</policy>
+                    <createValues>
+                        <string>"organizationalUnit"</string>
+                        <string>"top"</string>
+                    </createValues>
+                </dataset>
+                <dataset>
+                    <name>orgUnitID</name>
+                    <policy>KEEP</policy>
+                    <createValues>
+                        <string>srcBean.getDatasetFirstValueById("ouID")</string>
+                    </createValues>
+                </dataset>  
+                 <dataset>
+                    <name>orgUnitParentID</name>
+                    <policy>KEEP</policy>
+                    <createValues>
+                        <string>srcBean.getDatasetFirstValueById("ouParentID")</string>
+                    </createValues>
+                </dataset>  
+            </propertiesBasedSyncOptions>
+            <scriptInclude>
+                <string>get_dn.js</string>
+            </scriptInclude>
+        </task>
+        <task>
+            <name>createUsers</name>
+            <bean>org.lsc.beans.SimpleBean</bean>
+            <asyncLdapSourceService>
+                <name>ldap-src-service</name>
+                <connection reference="ldap-OpenLDAP-conn" />
+                <baseDn>ou=Domain Users,dc=op,dc=uni-magdeburg,dc=de</baseDn>
+                <pivotAttributes>
+                    <string>employeeID</string>
+                </pivotAttributes>
+                <fetchedAttributes>
+                    <string>cn</string>
+                    <string>description</string>
+                    <string>givenName</string>
+                    <string>mail</string>
+                    <string>sn</string>
+                    <string>uid</string>
+                    <string>employeeID</string>
+                    <string>userStatus</string>
+                    <string>userAccountControl</string>
+                    <string>userStatusValidFrom</string>
+                    <string>accountExpires</string>
+                </fetchedAttributes>
+                <getAllFilter><![CDATA[(objectClass=domainAccount)]]></getAllFilter>
+                <getOneFilter><![CDATA[(&(objectClass=domainAccount)(employeeID={employeeID}))]]></getOneFilter>
+                <cleanFilter><![CDATA[(&(objectClass=domainAccount)(employeeID={employeeID}))]]></cleanFilter>
+                <synchronizingAllWhenStarting>false</synchronizingAllWhenStarting>
+                <serverType>OpenLDAP</serverType>
+            </asyncLdapSourceService>
+            <ldapDestinationService>
+                <name>ldap-dst-service</name>
+                <connection reference="ldap-AD-conn" />
+                <baseDn>ou=Domain Users,DC=kerberos,DC=uni-magdeburg,DC=de</baseDn>
+                <pivotAttributes>
+                    <string>employeeID</string>
+                </pivotAttributes>
+                <fetchedAttributes>
+                    <string>cn</string>
+                    <string>givenName</string>
+                    <string>objectclass</string>
+                    <string>sAMAccountName</string>
+                    <string>userPrincipalName</string>
+                    <string>altSecurityIdentities</string>
+                    <string>userAccountControl</string>
+                    <string>sn</string>
+                    <string>employeeID</string>
+                    <string>pwdLastSet</string>
+                    <string>uidNumber</string>
+                    <string>userStatus</string>
+                    <string>userStatusValidFrom</string>
+                    <string>accountExpires</string>
+                </fetchedAttributes>
+                <getAllFilter><![CDATA[(objectClass=user)]]></getAllFilter>
+                <getOneFilter><![CDATA[(&(objectClass=user)(employeeID={employeeID}))]]></getOneFilter>
+            </ldapDestinationService>
+            <propertiesBasedSyncOptions>
+                <mainIdentifier>js:getDnOfUser(srcBean.getMainIdentifier(), srcBean.getDatasetFirstValueById("cn"), "dc=op,dc=uni-magdeburg,dc=de", "DC=kerberos,DC=uni-magdeburg,DC=de")</mainIdentifier>
+                <defaultDelimiter>;</defaultDelimiter>
+                <defaultPolicy>FORCE</defaultPolicy>
+                <conditions>
+                    <create>true</create>
+                    <update>false</update>
+                    <delete>false</delete>
+                    <changeId>false</changeId>
+                </conditions>
+                <dataset>
+                    <name>userStatusValidFrom</name>
+                    <policy>KEEP</policy>
+                    <forceValues>
+                        <string>js:convertOpenLDAPToAD(srcBean.getDatasetFirstValueById("userStatusValidFrom"))</string>
+                    </forceValues>
+                </dataset>
+                <dataset>
+                    <name>objectclass</name>
+                    <policy>KEEP</policy>
+                    <createValues>
+                        <string>"user"</string>
+                        <string>"organizationalPerson"</string>
+                        <string>"person"</string>
+                        <string>"top"</string>
+                    </createValues>
+                </dataset>
+                <dataset>
+                    <name>sAMAccountName</name>
+                    <policy>KEEP</policy>
+                    <forceValues>
+                        <string>srcBean.getDatasetFirstValueById("uid")</string>
+                    </forceValues>
+                </dataset>
+                  <dataset>
+                    <name>accountExpires</name>
+                    <policy>FORCE</policy>
+                    <forceValues>
+                        <string>js:getAccountExpires(srcBean.getDatasetFirstValueById("accountExpires"))</string>
+                 </forceValues>
+                </dataset>
+                <dataset>
+                    <name>userPrincipalName</name>
+                    <policy>KEEP</policy>
+                    <forceValues>
+                        <string>srcBean.getDatasetFirstValueById("uid") + "@kerberos.uni-magdeburg.de"</string>
+                    </forceValues>
+                </dataset>
+                <dataset>
+                    <name>altSecurityIdentities</name>
+                    <policy>KEEP</policy>
+                    <forceValues>
+                        <string>"Kerberos:" + srcBean.getDatasetFirstValueById("uid") + "@HEIMDAL.UNI-MAGDEBURG.DE"</string>
+                    </forceValues>
+                </dataset>
+            <dataset>
+                <name>userAccountControl</name>
+                <policy>KEEP</policy>
+                <forceValues>
+                    <string>"2"</string>
+                </forceValues>
+            </dataset>
+
+            </propertiesBasedSyncOptions>
+            <scriptInclude>
+                <string>get_dn.js</string>
+            </scriptInclude>
+        </task>
+     <task>
+            <name>updateUsers</name>
+            <bean>org.lsc.beans.SimpleBean</bean>
+            <asyncLdapSourceService>
+                <name>ldap-update-from-service</name>
+                <connection reference="ldap-OpenLDAP-conn" />
+                <baseDn>ou=Domain Users,dc=op,dc=uni-magdeburg,dc=de</baseDn>
+                <pivotAttributes>
+                    <string>employeeID</string>
+                </pivotAttributes>
+                <fetchedAttributes>
+                    <string>cn</string>
+                    <string>description</string>
+                    <string>givenName</string>
+                    <string>mail</string>
+                    <string>sn</string>
+                    <string>uid</string>
+                    <string>employeeID</string>
+                    <string>userStatus</string>
+                    <string>userAccountControl</string>
+                    <string>userStatusValidFrom</string>
+                    <string>accountExpires</string>
+                </fetchedAttributes>
+                <getAllFilter><![CDATA[(objectClass=domainAccount)]]></getAllFilter>
+                <getOneFilter><![CDATA[(&(objectClass=domainAccount)(employeeID={employeeID}))]]></getOneFilter>
+                <cleanFilter><![CDATA[(&(objectClass=domainAccount)(employeeID={employeeID}))]]></cleanFilter>
+                <synchronizingAllWhenStarting>false</synchronizingAllWhenStarting>
+                <serverType>OpenLDAP</serverType>   
+            </asyncLdapSourceService>
+            <ldapDestinationService>
+                <name>ldap-update-to-service</name>
+                <connection reference="ldap-AD-conn" />
+                <baseDn>ou=Domain Users,DC=kerberos,DC=uni-magdeburg,DC=de</baseDn>
+                <pivotAttributes>
+                    <string>employeeID</string>
+                </pivotAttributes>
+                <fetchedAttributes>
+                    <string>cn</string>
+                    <string>givenName</string>
+                    <string>sAMAccountName</string>
+                    <string>userPrincipalName</string>
+                    <string>altSecurityIdentities</string>
+                    <string>userAccountControl</string>
+                    <string>sn</string>
+                    <string>employeeID</string>
+                    <string>uidNumber</string>
+                    <string>userStatus</string>
+                    <string>userStatusValidFrom</string>
+                    <string>accountExpires</string>
+                    <string>pwdLastSet</string> 
+                </fetchedAttributes>
+                <getAllFilter><![CDATA[(objectClass=user)]]></getAllFilter>
+                <getOneFilter><![CDATA[(&(objectClass=user)(employeeID={employeeID}))]]></getOneFilter>
+            </ldapDestinationService>
+            <propertiesBasedSyncOptions>
+                <mainIdentifier>js:getDnOfUser(srcBean.getMainIdentifier(), srcBean.getDatasetFirstValueById("cn"), "dc=op,dc=uni-magdeburg,dc=de", "DC=kerberos,DC=uni-magdeburg,DC=de")</mainIdentifier>
+                <defaultDelimiter>;</defaultDelimiter>
+                <defaultPolicy>FORCE</defaultPolicy>
+                <conditions>
+                    <create>false</create>
+                    <update>true</update>
+                </conditions>
+                <dataset>
+                    <name>userStatusValidFrom</name>
+                    <policy>FORCE</policy>
+                    <forceValues>
+                        <string>js:convertOpenLDAPToAD(srcBean.getDatasetFirstValueById("userStatusValidFrom"))</string>
+                    </forceValues>
+                </dataset>
+                <dataset>
+                    <name>accountExpires</name>
+                    <policy>FORCE</policy>
+                    <forceValues>
+                        <string>js:getAccountExpires(srcBean.getDatasetFirstValueById("accountExpires"))</string>
+                 </forceValues>
+                </dataset>
+                <dataset>
+                    <name>sAMAccountName</name>
+                    <policy>FORCE</policy>
+                    <forceValues>
+                        <string>srcBean.getDatasetFirstValueById("uid")</string>
+                    </forceValues>
+                </dataset>
+                <dataset>
+                    <name>userPrincipalName</name>
+                    <policy>FORCE</policy>
+                    <forceValues>
+                        <string>srcBean.getDatasetFirstValueById("uid") + "@kerberos.uni-magdeburg.de"</string>
+                    </forceValues>
+                </dataset>
+                <dataset>
+                    <name>altSecurityIdentities</name>
+                    <policy>FORCE</policy>
+                    <forceValues>
+                        <string>"Kerberos:" + srcBean.getDatasetFirstValueById("uid") + "@HEIMDAL.UNI-MAGDEBURG.DE"</string>
+                    </forceValues>
+                </dataset>
+            <dataset>
+                <name>userAccountControl</name>
+                <policy>FORCE</policy>
+                
+                <forceValues>
+                    <string><![CDATA[
+                        js:
+                        
+                            var pwdLastSet = dstBean.getDatasetFirstValueById("pwdLastSet");
+                            var dstUAC = dstBean.getDatasetFirstValueById("userAccountControl");
+                            var srcUAC = srcBean.getDatasetFirstValueById("userAccountControl");
+                            var value = dstUAC
+                            if (pwdLastSet && srcUAC && dstUAC) {
+                                
+                            // if no pre-auth required would be set, then that should be equally specified here. That will not be implemented here.  
+
+                                if(dstBean.getDatasetFirstValueById("pwdLastSet") > 0 || dstBean.getDatasetFirstValueById("pwdLastSet") == -1) value = srcUAC;
+
+                                if (srcUAC == 2) {
+                                    value = 514
+                                }
+                            }
+                            
+                            value
+                        ]]></string>
+                </forceValues>
+            </dataset>
+            <dataset>
+                <name>pwdLastSet</name>
+                <policy>KEEP</policy>
+            
+            </dataset>
+            </propertiesBasedSyncOptions>
+            <scriptInclude>
+                <string>get_dn.js</string>
+            </scriptInclude>
+        </task>
+        
+        <task>
+            <name>createGroups</name> 
+            <bean>org.lsc.beans.SimpleBean</bean>
+            <asyncLdapSourceService>
+                <name>group-source-service</name>
+                <connection reference="ldap-OpenLDAP-conn" />
+                <baseDn>ou=Groups,dc=op,dc=uni-magdeburg,dc=de</baseDn>
+                <pivotAttributes>
+                    <string>cn</string>
+                </pivotAttributes>
+                <fetchedAttributes>
+                    <string>cn</string>
+                    <string>description</string>
+                    <string>groupType</string>
+                    <string>member</string>
+                </fetchedAttributes>
+                <getAllFilter><![CDATA[(objectClass=customGroup)]]></getAllFilter>
+                <getOneFilter><![CDATA[(&(objectClass=customGroup)(cn={cn}))]]></getOneFilter>
+                <cleanFilter><![CDATA[(&(objectClass=customGroup)(cn={cn}))]]></cleanFilter>
+                <synchronizingAllWhenStarting>false</synchronizingAllWhenStarting>
+                <serverType>OpenLDAP</serverType>
+            </asyncLdapSourceService>
+            <ldapDestinationService>
+                <name>group-dst-service</name>
+                <connection reference="ldap-AD-conn" />
+                <baseDn>ou=Groups,DC=kerberos,DC=uni-magdeburg,DC=de</baseDn>
+                <pivotAttributes>
+                    <string>cn</string>
+                </pivotAttributes>
+                <fetchedAttributes>
+                    <string>cn</string>
+                    <string>description</string>
+                    <string>groupType</string>
+                    <string>sAMAccountName</string>
+                    <string>objectClass</string>
+                </fetchedAttributes>
+                <getAllFilter><![CDATA[(objectClass=group)]]></getAllFilter>
+                <getOneFilter><![CDATA[(&(objectClass=group)(cn={cn}))]]></getOneFilter>
+            </ldapDestinationService>
+            <propertiesBasedSyncOptions>
+                <mainIdentifier>js:getDnOfUser(srcBean.getMainIdentifier(), srcBean.getDatasetFirstValueById("cn"), "dc=op,dc=uni-magdeburg,dc=de", "DC=kerberos,DC=uni-magdeburg,DC=de")</mainIdentifier>
+                <defaultDelimiter>;</defaultDelimiter>
+                <defaultPolicy>FORCE</defaultPolicy>
+                <conditions>
+                    <create>true</create>
+                    <update>true</update>
+                    <delete>true</delete>
+                    <changeId>true</changeId>
+                </conditions>
+                <dataset>
+                    <name>objectclass</name>
+                    <policy>KEEP</policy>
+                    <createValues>
+                        <string>"group"</string>
+                        <string>"top"</string>
+                    </createValues>
+                </dataset>
+                <dataset>
+                    <name>sAMAccountName</name>
+                    <policy>KEEP</policy>
+                    <createValues>
+                        <string>srcBean.getDatasetFirstValueById("cn")</string>
+                    </createValues>
+                </dataset>  
+            </propertiesBasedSyncOptions>
+            <scriptInclude>
+                <string>get_dn.js</string>
+            </scriptInclude>
+        </task>
+    
+        <task>
+            <name>updateGroups</name> 
+            <bean>org.lsc.beans.SimpleBean</bean>
+            <asyncLdapSourceService>
+                <name>group-async-update-source-service</name>
+                <connection reference="ldap-OpenLDAP-conn" />
+                <baseDn>ou=Groups,dc=op,dc=uni-magdeburg,dc=de</baseDn>
+                <pivotAttributes>
+                    <string>cn</string>
+                </pivotAttributes>
+                <fetchedAttributes>
+                    <string>cn</string>
+                    <string>description</string>
+                    <string>groupType</string>
+                    <string>member</string>
+                </fetchedAttributes>
+                <getAllFilter><![CDATA[(objectClass=customGroup)]]></getAllFilter>
+                <getOneFilter><![CDATA[(&(objectClass=customGroup)(cn={cn}))]]></getOneFilter>
+                <cleanFilter><![CDATA[(&(objectClass=customGroup)(cn={cn}))]]></cleanFilter>
+                <synchronizingAllWhenStarting>false</synchronizingAllWhenStarting>
+                <serverType>OpenLDAP</serverType>
+            </asyncLdapSourceService>
+            <ldapDestinationService>
+                <name>group-async-update-dst-service</name>
+                <connection reference="ldap-AD-conn" />
+                <baseDn>ou=Groups,DC=kerberos,DC=uni-magdeburg,DC=de</baseDn>
+                <pivotAttributes>
+                    <string>cn</string>
+                </pivotAttributes>
+                <fetchedAttributes>
+                    <string>cn</string>
+                    <string>description</string>
+                    <string>member</string>
+                    <string>sAMAccountName</string>
+                    <string>groupType</string>
+                </fetchedAttributes>
+                <getAllFilter><![CDATA[(objectClass=group)]]></getAllFilter>
+                <getOneFilter><![CDATA[(&(objectClass=group)(cn={cn}))]]></getOneFilter>
+            </ldapDestinationService>
+            <propertiesBasedSyncOptions>
+                <mainIdentifier>js:getDnOfUser(srcBean.getMainIdentifier(), srcBean.getDatasetFirstValueById("cn"), "dc=op,dc=uni-magdeburg,dc=de", "DC=kerberos,DC=uni-magdeburg,DC=de")</mainIdentifier>
+                <defaultDelimiter>;</defaultDelimiter>
+                <defaultPolicy>FORCE</defaultPolicy>
+                <conditions>
+                    <create>false</create>
+                    <update>true</update>
+                    <delete>true</delete>
+                </conditions>
+                <dataset>
+                    <name>groupType</name>
+                    <policy>FORCE</policy>
+                    <createValues>
+                        <string>srcBean.getDatasetFirstValueById("groupType")</string>
+                    </createValues>
+                </dataset>   
+                <dataset>
+                    <name>sAMAccountName</name>
+                    <policy>FORCE</policy>
+                    <createValues>
+                        <string>srcBean.getDatasetFirstValueById("cn")</string>
+                    </createValues>
+                </dataset>   
+                <dataset>
+                    <name>member</name>
+                    <policy>FORCE</policy>
+                    <forceValues>
+                        <string><![CDATA[
+                                js:
+                            var membersSrcDn = srcBean.getDatasetValuesById("member");
+                            var membersDstDn = [];
+                            function normalizeDN(dn) {
+                                return dn.replace(",ou", ",OU").replace("DC=kerberos,DC=uni-magdeburg,DC=de", "DC=kerberos,DC=uni-magdeburg,DC=de")
+                            }
+                            // Process individual members and groups
+                            for (var i = 0; i < membersSrcDn.size(); i++) {
+                                var memberSrcDn = membersSrcDn.get(i);
+                                // Check if the current DN is a group or an individual member
+                                var isGroup = memberSrcDn.indexOf("ou=Groups") !== -1;
+                                if (isGroup) {
+                                    // If it's a group, add the group DN directly
+                                    var groupCn = memberSrcDn.split(",")[0].split("=")[1]; // Extract CN of the group
+                                    var groupDn = ldap.search("ou=Groups", "(cn=" + groupCn + ")");
+                                    if (groupDn.size() == 1) {
+                                        membersDstDn.push(normalizeDN(groupDn.get(0) + "," + ldap.getContextDn()));
+                                    }
+                                } else {
+                                    // If it's an individual member, process as before
+                                    var uid = "";
+
+                                    try {
+                                        uid = srcLdap.attribute(memberSrcDn, "uid").get(0);
+                                    } catch(e) {
+                                        continue;
+                                    }
+                                    var destDn = ldap.search("OU=Domain Users", "(sAMAccountName=" + uid + ")");
+                                    if (destDn.size() == 0 || destDn.size() > 1) {
+                                        continue;
+                                    }
+
+                                    var destMemberDn = destDn.get(0) + "," + ldap.getContextDn();
+                                    membersDstDn.push(normalizeDN(destMemberDn));
+                                }
+                            }
+
+                    
+                            membersDstDn
+                         
+                        ]]></string>
+                    </forceValues>
+                </dataset>
+            </propertiesBasedSyncOptions>
+            <scriptInclude>
+                <string>get_dn.js</string>
+            </scriptInclude>
+        </task>
+    </tasks>
+    <security>
+    </security>
+</lsc>

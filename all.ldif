@@ -1,0 +1,1509 @@
+version: 1
+
+dn: dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: dcObject
+objectClass: organization
+objectClass: top
+dc: openldap
+o: openldap.krb.uni-magdeburg.de
+
+dn: ou=Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: Users
+ouID: 4
+ouParentID: 0
+
+dn: ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: top
+ou: Groups
+ouID: 21
+ouParentID: 0
+
+dn: ou=auto_test,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: automountMap
+objectClass: top
+ou: auto_test
+
+dn: ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: automount
+ouID: 3
+ouParentID: 0
+
+dn: ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: Domain Users
+ouID: 1
+ouParentID: 0
+
+dn: uid=ldapbinduser,ou=Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: binduser
+employeeID: binduser
+gender: neutral
+sn: binduser
+uid: ldapbinduser
+userAccountControl: 512
+userStatus: binduser
+userStatusValidFrom: 20240718061255.489Z
+pwdLastSet: 20240719121940Z
+userPassword:: e01ENX05TnZLZ0k0UUxEQmN1UzhaTFJidlRRPT0=
+
+dn: cn=Test123,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: Test123
+groupType: -2147483646
+uniqueGroupID: 5
+
+dn: cn=32IRFznr,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: 32IRFznr
+groupType: -2147483646
+uniqueGroupID: 7028
+gidNumber: 3227
+uniqueMember: cn=Mz2zzGKP,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=GPt9W7nq,ou=qFQV4nnv,ou=h02fxHod,ou=IYGyYlXc,ou=LJRpCcgK,o
+ u=fd3okXQM,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,
+ dc=de
+
+dn: cn=6KI5Cygg,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: 6KI5Cygg
+groupType: -2147483640
+uniqueGroupID: 2195
+gidNumber: 1347
+uniqueMember: cn=6KI5Cygg,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+
+dn: cn=8f7N2021,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: 8f7N2021
+groupType: -2147483640
+uniqueGroupID: 9922
+gidNumber: 9858
+uniqueMember: cn=qq7YS4e8,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=SSIeAr1H,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=SC1wKQXK,ou=CMNKcqsR,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=Sc7UWYUJ,ou=IjMElPAL,ou=VDHNuyb3,ou=P6hGq26w,ou=VjVFDiug,o
+ u=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=E9V0y5x4,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: E9V0y5x4
+groupType: 8
+uniqueGroupID: 4152
+gidNumber: 9193
+uniqueMember: uid=2aHMtvkS,ou=1m4xJ6Sr,ou=eOkgo6nA,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=83yWsE6e,ou=EPOBW0lO,ou=Ysv23LT2,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=BZ3e0wIr,ou=k74JPGuR,ou=zi2elkTR,ou=faNgfPot,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=ZJ9Mcfw6,ou=FMxTUxnm,ou=dBvYNgKf,ou=f4IhESwk,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=HTztQOgR,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: HTztQOgR
+groupType: -2147483644
+uniqueGroupID: 9373
+gidNumber: 1609
+uniqueMember: cn=6KI5Cygg,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=u4soTPtL,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=ulyGxYpd,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=lGbedJ61,ou=ZUCqF8pT,ou=Domain Users,dc=openldap,dc=krb,dc
+ =uni-magdeburg,dc=de
+
+dn: cn=JQZf62ji,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: JQZf62ji
+groupType: -2147483646
+uniqueGroupID: 2490
+gidNumber: 3355
+uniqueMember: cn=Mz2zzGKP,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=XeFJ6nNK,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=XPZOCEQw,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=BZ3e0wIr,ou=k74JPGuR,ou=zi2elkTR,ou=faNgfPot,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=SC1wKQXK,ou=CMNKcqsR,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=KyhjeU5L,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: KyhjeU5L
+groupType: 4
+uniqueGroupID: 6494
+gidNumber: 6396
+uniqueMember: uid=IJHpvf48,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,dc
+ =uni-magdeburg,dc=de
+uniqueMember: uid=T3c5V7DD,ou=yEqnOC9v,ou=QQyotxMC,ou=Z2NjrTNT,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=mGAN8LHm,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: mGAN8LHm
+groupType: 8
+uniqueGroupID: 1756
+gidNumber: 1827
+uniqueMember: uid=T3c5V7DD,ou=yEqnOC9v,ou=QQyotxMC,ou=Z2NjrTNT,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=mnPJECw8,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: mnPJECw8
+groupType: -2147483644
+uniqueGroupID: 6808
+gidNumber: 3568
+uniqueMember: cn=nqumXMUq,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=re6n46D9,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=YIZoSnLl,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+
+dn: cn=Mz2zzGKP,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: Mz2zzGKP
+groupType: -2147483646
+uniqueGroupID: 4820
+gidNumber: 6358
+uniqueMember: cn=JQZf62ji,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=XeFJ6nNK,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=7USFFqMa,ou=roMPI0ge,ou=B0ZXRj18,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=A7ddwagd,ou=gQVa5oeR,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=lGbedJ61,ou=ZUCqF8pT,ou=Domain Users,dc=openldap,dc=krb,dc
+ =uni-magdeburg,dc=de
+
+dn: cn=nqumXMUq,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: nqumXMUq
+groupType: -2147483644
+uniqueGroupID: 1845
+gidNumber: 3569
+uniqueMember: cn=HTztQOgR,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=u4soTPtL,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+
+dn: cn=qq7YS4e8,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: qq7YS4e8
+groupType: -2147483646
+uniqueGroupID: 9518
+gidNumber: 7443
+uniqueMember: uid=2aHMtvkS,ou=1m4xJ6Sr,ou=eOkgo6nA,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=re6n46D9,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: re6n46D9
+groupType: -2147483640
+uniqueGroupID: 8272
+gidNumber: 3997
+uniqueMember: cn=32IRFznr,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=YIZoSnLl,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=tnXPwaGL,ou=xlEo4MkW,ou=4LWrLLvv,ou=k74JPGuR,ou=zi2elkTR,o
+ u=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=XhB6cU0z,ou=QHN2zh6s,ou=z6edK4UH,ou=dBvYNgKf,ou=f4IhESwk,o
+ u=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=rTuggskn,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: rTuggskn
+groupType: -2147483644
+uniqueGroupID: 5943
+gidNumber: 6477
+uniqueMember: cn=re6n46D9,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=SVFlI7hC,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=tnXPwaGL,ou=xlEo4MkW,ou=4LWrLLvv,ou=k74JPGuR,ou=zi2elkTR,o
+ u=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=SSIeAr1H,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: SSIeAr1H
+groupType: -2147483640
+uniqueGroupID: 9470
+gidNumber: 5588
+uniqueMember: uid=pt95YtsT,ou=M0dwblyI,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=SVFlI7hC,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: SVFlI7hC
+groupType: -2147483644
+uniqueGroupID: 6876
+gidNumber: 2113
+uniqueMember: cn=mnPJECw8,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: cn=uHfdT2RE,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=A7ddwagd,ou=gQVa5oeR,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=t3VjGIAB,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: t3VjGIAB
+groupType: -2147483640
+uniqueGroupID: 9966
+gidNumber: 3863
+uniqueMember: uid=4kg6mJSm,ou=6B0ywcmq,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,o
+ u=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=FvtECw3d,ou=f4IhESwk,ou=Domain Users,dc=openldap,dc=krb,dc
+ =uni-magdeburg,dc=de
+uniqueMember: uid=SzjSZ6Q2,ou=gQVa5oeR,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=tAuxDqTb,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: tAuxDqTb
+groupType: 4
+uniqueGroupID: 1871
+gidNumber: 1859
+uniqueMember: cn=HTztQOgR,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=2aHMtvkS,ou=1m4xJ6Sr,ou=eOkgo6nA,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=ZJ9Mcfw6,ou=FMxTUxnm,ou=dBvYNgKf,ou=f4IhESwk,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=u4soTPtL,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: u4soTPtL
+groupType: -2147483646
+uniqueGroupID: 9437
+gidNumber: 9495
+uniqueMember: cn=32IRFznr,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=4kg6mJSm,ou=6B0ywcmq,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,o
+ u=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=uHfdT2RE,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: uHfdT2RE
+groupType: -2147483644
+uniqueGroupID: 6493
+gidNumber: 9109
+uniqueMember: uid=2aHMtvkS,ou=1m4xJ6Sr,ou=eOkgo6nA,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=7USFFqMa,ou=roMPI0ge,ou=B0ZXRj18,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=tnXPwaGL,ou=xlEo4MkW,ou=4LWrLLvv,ou=k74JPGuR,ou=zi2elkTR,o
+ u=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=ulyGxYpd,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: ulyGxYpd
+groupType: -2147483640
+uniqueGroupID: 9276
+gidNumber: 6902
+uniqueMember: uid=7USFFqMa,ou=roMPI0ge,ou=B0ZXRj18,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=WgmpzXjn,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: WgmpzXjn
+groupType: 8
+uniqueGroupID: 3099
+gidNumber: 9841
+uniqueMember: cn=E9V0y5x4,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=d
+ e
+uniqueMember: uid=4kg6mJSm,ou=6B0ywcmq,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,o
+ u=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=SzjSZ6Q2,ou=gQVa5oeR,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=tnXPwaGL,ou=xlEo4MkW,ou=4LWrLLvv,ou=k74JPGuR,ou=zi2elkTR,o
+ u=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=XhB6cU0z,ou=QHN2zh6s,ou=z6edK4UH,ou=dBvYNgKf,ou=f4IhESwk,o
+ u=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=XeFJ6nNK,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: XeFJ6nNK
+groupType: -2147483646
+uniqueGroupID: 4079
+gidNumber: 5116
+uniqueMember: uid=lGbedJ61,ou=ZUCqF8pT,ou=Domain Users,dc=openldap,dc=krb,dc
+ =uni-magdeburg,dc=de
+uniqueMember: uid=tnXPwaGL,ou=xlEo4MkW,ou=4LWrLLvv,ou=k74JPGuR,ou=zi2elkTR,o
+ u=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=XPZOCEQw,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: XPZOCEQw
+groupType: -2147483646
+uniqueGroupID: 1806
+gidNumber: 4151
+uniqueMember: uid=7USFFqMa,ou=roMPI0ge,ou=B0ZXRj18,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=IJHpvf48,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,dc
+ =uni-magdeburg,dc=de
+uniqueMember: uid=SC1wKQXK,ou=CMNKcqsR,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=YIZoSnLl,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: YIZoSnLl
+groupType: -2147483646
+uniqueGroupID: 9547
+gidNumber: 5729
+uniqueMember: uid=4kg6mJSm,ou=6B0ywcmq,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,o
+ u=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=7USFFqMa,ou=roMPI0ge,ou=B0ZXRj18,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=83yWsE6e,ou=EPOBW0lO,ou=Ysv23LT2,ou=Domain Users,dc=openld
+ ap,dc=krb,dc=uni-magdeburg,dc=de
+uniqueMember: uid=pt95YtsT,ou=M0dwblyI,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Use
+ rs,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+dn: cn=TestGruppe,ou=Groups,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: TestGruppe
+groupType: -2147483646
+uniqueGroupID: 2
+gidNumber: 1001
+
+dn: cn=share,ou=auto_test,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=smbfs ://kerberosad.kerberosad.uni-magdeburg.d
+ e/Shared
+cn: share
+
+dn: ou=auto_home,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: automountMap
+objectClass: top
+ou: auto_home
+
+dn: ou=auto.master,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: automountMap
+objectClass: top
+ou: auto.master
+
+dn: ou=auto_master,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: automountMap
+objectClass: top
+ou: auto_master
+
+dn: cn=123,ou=auto_home,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=
+ de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=smbfs ://kerberosad.kerberosad.uni-magdeburg.d
+ e/Shared
+cn: 123
+
+dn: cn=321,ou=auto_home,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=
+ de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=smbfs ://kerberosad.kerberosad.uni-magdeburg.d
+ e/NotShared
+cn: 321
+
+dn: ou=auto.test,ou=auto.master,ou=automount,dc=openldap,dc=krb,dc=uni-magde
+ burg,dc=de
+objectClass: automountMap
+objectClass: top
+ou: auto.test
+
+dn: cn=/test,ou=auto.test,ou=auto.master,ou=automount,dc=openldap,dc=krb,dc=
+ uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: auto.test
+cn: /test
+
+dn: cn=/shares,ou=auto.test,ou=auto.master,ou=automount,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: auto.test
+cn: /shares
+
+dn: cn=home,cn=/test,ou=auto.test,ou=auto.master,ou=automount,dc=openldap,dc
+ =krb,dc=uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=cifs,rw,noperm,cruid=$UID,sec=krb5i       ://k
+ erberosad.kerberosad.uni-magdeburg.de/HomeFolders
+cn: home
+
+dn: cn=pub,cn=/shares,ou=auto.test,ou=auto.master,ou=automount,dc=openldap,d
+ c=krb,dc=uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=cifs,rw,noperm,cruid=$UID,sec=krb5i       ://k
+ erberosad.kerberosad.uni-magdeburg.de/Shared
+cn: pub
+
+dn: cn=notshared,cn=/shares,ou=auto.test,ou=auto.master,ou=automount,dc=open
+ ldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: -fstype=cifs,rw,noperm,cruid=$UID,sec=krb5i       ://k
+ erberosad.kerberosad.uni-magdeburg.de/NotShared
+cn: notshared
+
+dn: cn=/test,ou=auto_master,ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg
+ ,dc=de
+objectClass: automount
+objectClass: top
+automountInformation: auto_home
+cn: /test
+
+dn: ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: B0ZXRj18
+ouID: 3991
+ouParentID: 1
+
+dn: ou=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: eOkgo6nA
+ouID: 6680
+ouParentID: 1
+
+dn: ou=f4IhESwk,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: f4IhESwk
+ouID: 8857
+ouParentID: 1
+
+dn: ou=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: faNgfPot
+ouID: 8465
+ouParentID: 1
+
+dn: ou=Ysv23LT2,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: Ysv23LT2
+ouID: 7348
+ouParentID: 1
+
+dn: ou=Z2NjrTNT,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: Z2NjrTNT
+ouID: 8294
+ouParentID: 1
+
+dn: ou=ZUCqF8pT,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: ZUCqF8pT
+ouID: 7615
+ouParentID: 1
+
+dn: ou=fd3okXQM,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: fd3okXQM
+ouID: 8527
+ouParentID: 3991
+
+dn: ou=roMPI0ge,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: roMPI0ge
+ouID: 2109
+ouParentID: 3991
+
+dn: ou=VIaE44Uv,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: VIaE44Uv
+ouID: 7738
+ouParentID: 3991
+
+dn: uid=IJHpvf48,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magde
+ burg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_IJHpvf48
+employeeID: 9629
+gender: male
+sn: Doe
+uid: IJHpvf48
+userAccountControl: 2
+userStatus: Rentner
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342129620736
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/IJHpvf48
+pwdLastSet: 20240719134537Z
+uidNumber: 6623
+
+dn: ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: LJRpCcgK
+ouID: 1135
+ouParentID: 8527
+
+dn: ou=NYfRHe6K,ou=fd3okXQM,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: NYfRHe6K
+ouID: 2617
+ouParentID: 8527
+
+dn: ou=6B0ywcmq,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,ou=Domain Users,dc=openl
+ dap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 6B0ywcmq
+ouID: 4988
+ouParentID: 1135
+
+dn: ou=IYGyYlXc,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,ou=Domain Users,dc=openl
+ dap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: IYGyYlXc
+ouID: 5018
+ouParentID: 1135
+
+dn: uid=4kg6mJSm,ou=6B0ywcmq,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,ou=Domain U
+ sers,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_4kg6mJSm
+employeeID: 4577
+gender: male
+sn: Doe
+uid: 4kg6mJSm
+userAccountControl: 512
+userStatus: Ausgetreten
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342125089776
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/4kg6mJSm
+pwdLastSet: 20240719134535Z
+uidNumber: 3231
+
+dn: ou=Gmp4rSsT,ou=IYGyYlXc,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,ou=Domain Us
+ ers,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: Gmp4rSsT
+ouID: 7262
+ouParentID: 5018
+
+dn: ou=h02fxHod,ou=IYGyYlXc,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,ou=Domain Us
+ ers,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: h02fxHod
+ouID: 9689
+ouParentID: 5018
+
+dn: ou=HN3pMVte,ou=IYGyYlXc,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,ou=Domain Us
+ ers,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: HN3pMVte
+ouID: 6145
+ouParentID: 5018
+
+dn: uid=testuser123,ou=IYGyYlXc,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,ou=Domai
+ n Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: testuser
+employeeID: 142
+gender: ss
+sn: ss
+uid: testuser123
+userAccountControl: 2
+userStatus: s
+userStatusValidFrom: 20240715165804.586Z
+accountExpires: 133658819442890000
+gidNumber: 1001
+pwdLastSet: 20240719121940Z
+uidNumber: 1001
+userPassword:: e1NBU0x9dGVzdHVzZXIxMjNAS1JC
+
+dn: ou=qFQV4nnv,ou=h02fxHod,ou=IYGyYlXc,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18,
+ ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: qFQV4nnv
+ouID: 4489
+ouParentID: 9689
+
+dn: uid=GPt9W7nq,ou=qFQV4nnv,ou=h02fxHod,ou=IYGyYlXc,ou=LJRpCcgK,ou=fd3okXQM
+ ,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_GPt9W7nq
+employeeID: 5511
+gender: other
+sn: Doe
+uid: GPt9W7nq
+userAccountControl: 512
+userStatus: Rentner
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342128100560
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/GPt9W7nq
+pwdLastSet: 20240719134536Z
+uidNumber: 4734
+
+dn: uid=k74fqZVs,ou=HN3pMVte,ou=IYGyYlXc,ou=LJRpCcgK,ou=fd3okXQM,ou=B0ZXRj18
+ ,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_k74fqZVs
+employeeID: 2561
+gender: female
+sn: Doe
+uid: k74fqZVs
+userAccountControl: 512
+userStatus: Ruhend
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342128872144
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/k74fqZVs
+pwdLastSet: 20240719134536Z
+uidNumber: 2806
+
+dn: uid=7USFFqMa,ou=roMPI0ge,ou=B0ZXRj18,ou=Domain Users,dc=openldap,dc=krb,
+ dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_7USFFqMa
+employeeID: 7431
+gender: other
+sn: Doe
+uid: 7USFFqMa
+userAccountControl: 512
+userStatus: Aktiv
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342126599216
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/7USFFqMa
+pwdLastSet: 20240719134536Z
+uidNumber: 6313
+
+dn: ou=1m4xJ6Sr,ou=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 1m4xJ6Sr
+ouID: 4539
+ouParentID: 6680
+
+dn: ou=L2jASd3c,ou=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: L2jASd3c
+ouID: 5988
+ouParentID: 6680
+
+dn: ou=NG4UIgBY,ou=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: NG4UIgBY
+ouID: 3089
+ouParentID: 6680
+
+dn: ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: VjVFDiug
+ouID: 5915
+ouParentID: 6680
+
+dn: uid=2aHMtvkS,ou=1m4xJ6Sr,ou=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,
+ dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_2aHMtvkS
+employeeID: 8310
+gender: female
+sn: Doe
+uid: 2aHMtvkS
+userAccountControl: 512
+userStatus: Ausgetreten
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342124342368
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/2aHMtvkS
+pwdLastSet: 20240719134535Z
+uidNumber: 1647
+
+dn: ou=1DwWbMcz,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 1DwWbMcz
+ouID: 7896
+ouParentID: 5915
+
+dn: ou=c3F4rnAR,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: c3F4rnAR
+ouID: 1706
+ouParentID: 5915
+
+dn: ou=CMNKcqsR,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: CMNKcqsR
+ouID: 5520
+ouParentID: 5915
+
+dn: ou=P6hGq26w,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: P6hGq26w
+ouID: 1629
+ouParentID: 5915
+
+dn: uid=SC1wKQXK,ou=CMNKcqsR,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Users,dc=open
+ ldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_SC1wKQXK
+employeeID: 9080
+gender: other
+sn: Doe
+uid: SC1wKQXK
+userAccountControl: 512
+userStatus: Aktiv
+userStatusValidFrom: 20240719134333Z
+accountExpires: 133667342135621296
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/SC1wKQXK
+pwdLastSet: 20240719134538Z
+uidNumber: 9034
+
+dn: ou=amCwolXb,ou=P6hGq26w,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Users,dc=openl
+ dap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: amCwolXb
+ouID: 3745
+ouParentID: 1629
+
+dn: ou=VDHNuyb3,ou=P6hGq26w,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Users,dc=openl
+ dap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: VDHNuyb3
+ouID: 7572
+ouParentID: 1629
+
+dn: ou=7et1xB0e,ou=VDHNuyb3,ou=P6hGq26w,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Us
+ ers,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 7et1xB0e
+ouID: 9456
+ouParentID: 7572
+
+dn: ou=IjMElPAL,ou=VDHNuyb3,ou=P6hGq26w,ou=VjVFDiug,ou=eOkgo6nA,ou=Domain Us
+ ers,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: IjMElPAL
+ouID: 3282
+ouParentID: 7572
+
+dn: uid=Sc7UWYUJ,ou=IjMElPAL,ou=VDHNuyb3,ou=P6hGq26w,ou=VjVFDiug,ou=eOkgo6nA
+ ,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_Sc7UWYUJ
+employeeID: 1306
+gender: male
+sn: Doe
+uid: Sc7UWYUJ
+userAccountControl: 512
+userStatus: Aktiv
+userStatusValidFrom: 20240719134333Z
+accountExpires: 133667342131899712
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/Sc7UWYUJ
+pwdLastSet: 20240719134537Z
+uidNumber: 5880
+
+dn: ou=02YqiNmj,ou=f4IhESwk,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 02YqiNmj
+ouID: 5852
+ouParentID: 8857
+
+dn: ou=2zkHcCPQ,ou=f4IhESwk,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 2zkHcCPQ
+ouID: 4517
+ouParentID: 8857
+
+dn: ou=dBvYNgKf,ou=f4IhESwk,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: dBvYNgKf
+ouID: 4249
+ouParentID: 8857
+
+dn: ou=QSBkgSCI,ou=f4IhESwk,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: QSBkgSCI
+ouID: 3707
+ouParentID: 8857
+
+dn: uid=FvtECw3d,ou=f4IhESwk,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magde
+ burg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_FvtECw3d
+employeeID: 8825
+gender: male
+sn: Doe
+uid: FvtECw3d
+userAccountControl: 512
+userStatus: Ruhend
+userStatusValidFrom: 20240719134333Z
+accountExpires: 133667342132626160
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/FvtECw3d
+pwdLastSet: 20240719134537Z
+uidNumber: 2707
+
+dn: ou=dgAg8OZw,ou=dBvYNgKf,ou=f4IhESwk,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: dgAg8OZw
+ouID: 7469
+ouParentID: 4249
+
+dn: ou=FMxTUxnm,ou=dBvYNgKf,ou=f4IhESwk,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: FMxTUxnm
+ouID: 1352
+ouParentID: 4249
+
+dn: ou=z6edK4UH,ou=dBvYNgKf,ou=f4IhESwk,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: z6edK4UH
+ouID: 4509
+ouParentID: 4249
+
+dn: uid=ZJ9Mcfw6,ou=FMxTUxnm,ou=dBvYNgKf,ou=f4IhESwk,ou=Domain Users,dc=open
+ ldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_ZJ9Mcfw6
+employeeID: 4663
+gender: female
+sn: Doe
+uid: ZJ9Mcfw6
+userAccountControl: 512
+userStatus: Ausgetreten
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342123461184
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/ZJ9Mcfw6
+pwdLastSet: 20240719134535Z
+uidNumber: 6160
+
+dn: ou=g9Y5M2pK,ou=z6edK4UH,ou=dBvYNgKf,ou=f4IhESwk,ou=Domain Users,dc=openl
+ dap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: g9Y5M2pK
+ouID: 2619
+ouParentID: 4509
+
+dn: ou=QHN2zh6s,ou=z6edK4UH,ou=dBvYNgKf,ou=f4IhESwk,ou=Domain Users,dc=openl
+ dap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: QHN2zh6s
+ouID: 3119
+ouParentID: 4509
+
+dn: uid=XhB6cU0z,ou=QHN2zh6s,ou=z6edK4UH,ou=dBvYNgKf,ou=f4IhESwk,ou=Domain U
+ sers,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_XhB6cU0z
+employeeID: 9068
+gender: other
+sn: Doe
+uid: XhB6cU0z
+userAccountControl: 512
+userStatus: Rentner
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342127349552
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/XhB6cU0z
+pwdLastSet: 20240719134536Z
+uidNumber: 2442
+
+dn: ou=AccEDmEC,ou=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: AccEDmEC
+ouID: 7215
+ouParentID: 8465
+
+dn: ou=DQHkH7QP,ou=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: DQHkH7QP
+ouID: 6602
+ouParentID: 8465
+
+dn: ou=zi2elkTR,ou=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: zi2elkTR
+ouID: 3867
+ouParentID: 8465
+
+dn: uid=NKS3KmKJ,ou=AccEDmEC,ou=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,
+ dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_NKS3KmKJ
+employeeID: 5253
+gender: other
+sn: Doe
+uid: NKS3KmKJ
+userAccountControl: 512
+userStatus: Ruhend
+userStatusValidFrom: 20240719134333Z
+accountExpires: 133667342134871152
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/NKS3KmKJ
+pwdLastSet: 20240719134538Z
+uidNumber: 9198
+
+dn: ou=6H2fIouv,ou=zi2elkTR,ou=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 6H2fIouv
+ouID: 9427
+ouParentID: 3867
+
+dn: ou=k74JPGuR,ou=zi2elkTR,ou=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: k74JPGuR
+ouID: 6734
+ouParentID: 3867
+
+dn: ou=XnyLP1oB,ou=zi2elkTR,ou=faNgfPot,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: XnyLP1oB
+ouID: 1180
+ouParentID: 3867
+
+dn: ou=367hE9Sw,ou=k74JPGuR,ou=zi2elkTR,ou=faNgfPot,ou=Domain Users,dc=openl
+ dap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 367hE9Sw
+ouID: 1231
+ouParentID: 6734
+
+dn: ou=4LWrLLvv,ou=k74JPGuR,ou=zi2elkTR,ou=faNgfPot,ou=Domain Users,dc=openl
+ dap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 4LWrLLvv
+ouID: 1521
+ouParentID: 6734
+
+dn: uid=BZ3e0wIr,ou=k74JPGuR,ou=zi2elkTR,ou=faNgfPot,ou=Domain Users,dc=open
+ ldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_BZ3e0wIr
+employeeID: 1323
+gender: female
+sn: Doe
+uid: BZ3e0wIr
+userAccountControl: 512
+userStatus: Aktiv
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342121992448
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/BZ3e0wIr
+pwdLastSet: 20240719134535Z
+uidNumber: 2048
+
+dn: ou=cXcfZoLv,ou=4LWrLLvv,ou=k74JPGuR,ou=zi2elkTR,ou=faNgfPot,ou=Domain Us
+ ers,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: cXcfZoLv
+ouID: 6367
+ouParentID: 1521
+
+dn: ou=ijL8e0iR,ou=4LWrLLvv,ou=k74JPGuR,ou=zi2elkTR,ou=faNgfPot,ou=Domain Us
+ ers,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: ijL8e0iR
+ouID: 5163
+ouParentID: 1521
+
+dn: ou=xlEo4MkW,ou=4LWrLLvv,ou=k74JPGuR,ou=zi2elkTR,ou=faNgfPot,ou=Domain Us
+ ers,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: xlEo4MkW
+ouID: 8185
+ouParentID: 1521
+
+dn: uid=tnXPwaGL,ou=xlEo4MkW,ou=4LWrLLvv,ou=k74JPGuR,ou=zi2elkTR,ou=faNgfPot
+ ,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_tnXPwaGL
+employeeID: 5197
+gender: female
+sn: Doe
+uid: tnXPwaGL
+userAccountControl: 512
+userStatus: Aktiv
+userStatusValidFrom: 20240719134333Z
+accountExpires: 133667342133382480
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/tnXPwaGL
+pwdLastSet: 20240719134538Z
+uidNumber: 5804
+
+dn: ou=EPOBW0lO,ou=Ysv23LT2,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: EPOBW0lO
+ouID: 1963
+ouParentID: 7348
+
+dn: ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: g0yNuqrG
+ouID: 9985
+ouParentID: 7348
+
+dn: uid=83yWsE6e,ou=EPOBW0lO,ou=Ysv23LT2,ou=Domain Users,dc=openldap,dc=krb,
+ dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_83yWsE6e
+employeeID: 4633
+gender: male
+sn: Doe
+uid: 83yWsE6e
+userAccountControl: 512
+userStatus: Ausgetreten
+userStatusValidFrom: 20240719134333Z
+accountExpires: 133667342131137824
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/83yWsE6e
+pwdLastSet: 20240719134537Z
+uidNumber: 1173
+
+dn: ou=gQVa5oeR,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: gQVa5oeR
+ouID: 5829
+ouParentID: 9985
+
+dn: ou=lZbPb9yn,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: lZbPb9yn
+ouID: 3411
+ouParentID: 9985
+
+dn: ou=M0dwblyI,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: M0dwblyI
+ouID: 4441
+ouParentID: 9985
+
+dn: uid=A7ddwagd,ou=gQVa5oeR,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Users,dc=open
+ ldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_A7ddwagd
+employeeID: 3542
+gender: female
+sn: Doe
+uid: A7ddwagd
+userAccountControl: 512
+userStatus: Rentner
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342122740912
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/A7ddwagd
+pwdLastSet: 20240719134535Z
+uidNumber: 7903
+
+dn: uid=SzjSZ6Q2,ou=gQVa5oeR,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Users,dc=open
+ ldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_SzjSZ6Q2
+employeeID: 4074
+gender: female
+sn: Doe
+uid: SzjSZ6Q2
+userAccountControl: 512
+userStatus: Ausgetreten
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342125859520
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/SzjSZ6Q2
+pwdLastSet: 20240719134536Z
+uidNumber: 4950
+
+dn: uid=pt95YtsT,ou=M0dwblyI,ou=g0yNuqrG,ou=Ysv23LT2,ou=Domain Users,dc=open
+ ldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_pt95YtsT
+employeeID: 1785
+gender: male
+sn: Doe
+uid: pt95YtsT
+userAccountControl: 512
+userStatus: Rentner
+userStatusValidFrom: 20240719134333Z
+accountExpires: 133667342134127776
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/pt95YtsT
+pwdLastSet: 20240719134538Z
+uidNumber: 8726
+
+dn: ou=fEow9U4n,ou=Z2NjrTNT,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: fEow9U4n
+ouID: 8717
+ouParentID: 8294
+
+dn: ou=QQyotxMC,ou=Z2NjrTNT,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: QQyotxMC
+ouID: 3706
+ouParentID: 8294
+
+dn: ou=s4Ah95kX,ou=Z2NjrTNT,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: s4Ah95kX
+ouID: 8066
+ouParentID: 8294
+
+dn: ou=xrgvMGTe,ou=Z2NjrTNT,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: xrgvMGTe
+ouID: 9208
+ouParentID: 8294
+
+dn: ou=DusDOMRy,ou=QQyotxMC,ou=Z2NjrTNT,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: DusDOMRy
+ouID: 5651
+ouParentID: 3706
+
+dn: ou=FSt3UrcH,ou=QQyotxMC,ou=Z2NjrTNT,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: FSt3UrcH
+ouID: 2734
+ouParentID: 3706
+
+dn: ou=R9DSSeMb,ou=QQyotxMC,ou=Z2NjrTNT,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: R9DSSeMb
+ouID: 4161
+ouParentID: 3706
+
+dn: ou=yEqnOC9v,ou=QQyotxMC,ou=Z2NjrTNT,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: yEqnOC9v
+ouID: 6010
+ouParentID: 3706
+
+dn: ou=vB6TLpIl,ou=FSt3UrcH,ou=QQyotxMC,ou=Z2NjrTNT,ou=Domain Users,dc=openl
+ dap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: vB6TLpIl
+ouID: 1765
+ouParentID: 2734
+
+dn: uid=T3c5V7DD,ou=yEqnOC9v,ou=QQyotxMC,ou=Z2NjrTNT,ou=Domain Users,dc=open
+ ldap,dc=krb,dc=uni-magdeburg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_T3c5V7DD
+employeeID: 5815
+gender: female
+sn: Doe
+uid: T3c5V7DD
+userAccountControl: 512
+userStatus: Rentner
+userStatusValidFrom: 20240719134332Z
+accountExpires: 133667342121225376
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/T3c5V7DD
+pwdLastSet: 20240719134534Z
+uidNumber: 5917
+
+dn: ou=1kh7UBuJ,ou=ZUCqF8pT,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 1kh7UBuJ
+ouID: 6182
+ouParentID: 7615
+
+dn: ou=8WO7HLMQ,ou=ZUCqF8pT,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: 8WO7HLMQ
+ouID: 1011
+ouParentID: 7615
+
+dn: ou=ayekloWW,ou=ZUCqF8pT,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeb
+ urg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: ayekloWW
+ouID: 8310
+ouParentID: 7615
+
+dn: uid=lGbedJ61,ou=ZUCqF8pT,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magde
+ burg,dc=de
+objectClass: domainAccount
+objectClass: top
+cn: User_lGbedJ61
+employeeID: 1044
+gender: other
+sn: Doe
+uid: lGbedJ61
+userAccountControl: 512
+userStatus: Aktiv
+userStatusValidFrom: 20240719134333Z
+accountExpires: 133667342130380496
+gidNumber: 1001
+givenName: Doe
+homeDirectory: /home/lGbedJ61
+pwdLastSet: 20240719134537Z
+uidNumber: 5795
+
+dn: ou=i3ZHRPcK,ou=8WO7HLMQ,ou=ZUCqF8pT,ou=Domain Users,dc=openldap,dc=krb,d
+ c=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: i3ZHRPcK
+ouID: 1800
+ouParentID: 1011
+

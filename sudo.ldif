@@ -1,0 +1,28 @@
+version: 1
+
+dn: ou=sudo,dc=op,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: sudo
+ouID: 4
+ouParentID: 0
+
+dn: cn=defaults,ou=sudo,dc=op,dc=uni-magdeburg,dc=de
+objectClass: sudoRole
+objectClass: top
+cn: defaults
+sudoOption: env_reset
+sudoOption: mail_badpass
+sudoOption: secure_path=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/s
+ bin:/bin:/snap/bin
+
+dn: cn=testuser123,cn=defaults,ou=sudo,dc=op,dc=uni-magdeburg,dc=de
+objectClass: sudoRole
+objectClass: top
+cn: testuser123
+sudoCommand: ALL
+sudoHost: ALL
+sudoRunAsUser: ALL
+sudoUser: testuser123
+

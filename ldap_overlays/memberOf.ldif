@@ -1,21 +1,24 @@
-dn: olcOverlay=memberof,olcDatabase={2}mdb,cn=config
-objectClass: olcOverlayConfig
-objectClass: olcMemberOf
-olcOverlay: memberof
-olcMemberOfDangling: ignore
-olcMemberOfRefInt: TRUE
-
 dn: cn=module{0},cn=config
 changetype: modify
 add: olcModuleLoad
 olcModuleLoad: memberof.la
 
-dn: olcOverlay={3}memberof,olcDatabase={2}mdb,cn=config
+dn: olcOverlay=memberof,olcDatabase={1}mdb,cn=config
+changetype: add
+objectClass: olcConfig
+objectClass: olcMemberOfConfig
 objectClass: olcOverlayConfig
-objectClass: olcMemberOf
+objectClass: top
 olcOverlay: memberof
-olcMemberOfRefint: TRUE
+olcMemberOfDangling: ignore
+olcMemberOfRefInt: TRUE
+olcMemberOfGroupOC: customGroup
+olcMemberOfMemberAD: member
+olcMemberOfMemberOfAD: memberOf
 
-objectClass: olcOverlayConfig
-objectClass: olcMemberOf
-olcOverlay: {3}memberof
+
+dn: olcOverlay={4}memberof,olcDatabase={1}mdb,cn=config
+changetype: modify
+replace: olcMemberOfGroupOC
+olcMemberOfGroupOC: customGroup (strukturell)
+

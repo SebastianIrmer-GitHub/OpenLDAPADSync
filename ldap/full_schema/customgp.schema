@@ -1,0 +1,26 @@
+objectIdentifier customGroupSchema 1.3.6.1.4.1.99998
+objectIdentifier customGroupUserAttrs customGroupSchema:1
+objectIdentifier customGroupUserOCs customGroupSchema:2
+
+attributeType ( customGroupUserAttrs:1
+    NAME 'groupType'
+    DESC 'groupType'
+    EQUALITY integerMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+    SINGLE-VALUE )
+
+attributeType ( customGroupUserAttrs:2
+    NAME 'uniqueGroupID'
+    DESC 'uniqueGroupID'
+    EQUALITY caseIgnoreMatch
+    SUBSTR caseIgnoreSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+    SINGLE-VALUE)
+
+objectClass ( customGroupUserOCs:1
+    NAME 'customGroup'
+    DESC 'User Identity in the organization'
+    SUP top
+    STRUCTURAL
+    MUST ( cn $ groupType $ uniqueGroupID )
+    MAY ( description $ gidNumber $ memberURL $ member $ o $ ou $ owner ) )

@@ -1,0 +1,20 @@
+version: 1
+
+dn: ou=Groups,dc=op,dc=uni-magdeburg,dc=de
+objectClass: customOU
+objectClass: organizationalUnit
+objectClass: top
+ou: Groups
+ouID: 2
+ouParentID: 0
+
+dn: cn=123,ou=Groups,dc=op,dc=uni-magdeburg,dc=de
+objectClass: customGroup
+objectClass: top
+cn: 123
+groupType: 0
+uniqueGroupID: dd
+member: uid=testuser123,ou=Domain Users,dc=op,dc=uni-magdeburg,dc=de
+memberURL: ldap:///ou=Domain Users,dc=op,dc=uni-magdeburg,dc=de??sub?(object
+ Class=domainAccount)
+

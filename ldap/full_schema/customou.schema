@@ -1,0 +1,25 @@
+# ouSchema
+objectIdentifier ouSchema 1.3.6.1.4.1.99998
+objectIdentifier ouAttributes ouSchema:3
+objectIdentifier ouOCs ouSchema:4
+
+attributeType ( ouAttributes:1
+    NAME 'ouID'
+    DESC 'ID of OU'
+    EQUALITY integerMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+    USAGE userApplications )
+
+attributeType ( ouAttributes:2
+    NAME 'ouParentID'
+    DESC 'ID of Parent OU'
+    EQUALITY integerMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+    USAGE userApplications )
+
+objectClass ( ouOCs:1
+    NAME 'customOU'
+    DESC 'Object class for custom user attributes'
+    SUP organizationalUnit
+    STRUCTURAL
+    MUST ( ouID $ ouParentID $ ou ) )

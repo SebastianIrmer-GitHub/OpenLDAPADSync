@@ -1,0 +1,79 @@
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * by dn.exact="cn=admin,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" manage by dn="cn=ldapbinduser,ou=Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" read by * break
+olcAccess: {1}to attrs=userPassword by self write by anonymous auth by * none
+olcAccess: {2}to attrs=shadowLastChange by self write by * read
+olcAccess: {3}to * filter=(userAccountControl=512) by self read by anonymous auth
+
+
+
+!!!
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to attr=entry,uid by anonymous auth by * break
+
+
+# macOS userpassword entfernen
+dn: cn=config
+changetype: modify
+replace: olcAuthzRegexp
+olcAuthzRegexp: {0}"uid=([^,]+),cn=krb,cn=GSSAPI,cn=auth" "ldap:///ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de??sub?(&(uid=$1))"
+
+olcAuthzRegexp: {0}"uid=([^,]+),cn=krb,cn=GSSAPI,cn=auth" "uid=$1,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de"
+
+
+
+
+# einige Möglichkeiten dann: 
+# 1. entweder das oben zu benutzen, dann können sich Nutzer aber anonym binden. Haben aber keine Rechte. 
+# 2. One-Level Architektur, heißt alle Accounts unter der ou=Domain Users,...
+# 3. Custom Skript, dass Auth Expressions umformt und dann einbringt mit Nutzung von Binduser
+  # 4. speziell für jede Schicht der OU eine olcAccess 
+  # 5. weniger Restriction auf read, aber das ist eher schlecht. 
+dn: uid=testuser123,ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+uid: testuser123
+gender: ss
+userStatus: s
+sn: ss
+objectClass: domainAccount
+objectClass: top
+userStatusValidFrom: 20240715165804.586Z
+cn: testuser
+uidNumber: 1001
+gidNumber: 1001
+employeeID: 142
+accountExpires: 133658819442890000
+userAccountControl: 512
+userPassword:: e1NBU0x9dGVzdHVzZXIxMjNAS1JC
+
+!!!
+
+# uid=testuser123,ou=domain users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+# uid=testuser123,ou=domain users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de
+
+olcAccess: {3}to dn.subtree="ou=automount,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" attrs=objectClass
+  by dn.exact="uid=testuser123,cn=krb,cn=gssapi,cn=auth" read
+  by * none
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * by dn.exact="cn=admin,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" manage by dn="cn=ldapbinduser,ou=Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" read by * break
+olcAccess: {1}to attrs=userPassword by self write by anonymous auth by * none
+olcAccess: {2}to attrs=shadowLastChange by self write by * read
+olcAccess: {3}to dn.subtree="ou=Domain Users,dc=openldap,dc=krb,dc=uni-magdeburg,dc=de" filter=(userAccountControl=512) by self read
+
+
+dn: olcDatabase={2}mdb,cn=config
+changetype: modify
+replace: olcAccess
+olcAccess: {0}to * filter=(userAccountControl=2) by * none
+olcAccess: {1}to attrs=userPassword by self write by anonymous auth by * none
+olcAccess: {2}to attrs=shadowLastChange by self write by * read
+olcAccess: {3}to * by * read
+
+{3} to restrict access to automounts
+Abc

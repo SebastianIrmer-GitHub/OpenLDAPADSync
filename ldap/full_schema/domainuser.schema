@@ -1,0 +1,66 @@
+# domainUserSchema
+objectIdentifier domainUserSchema 1.3.6.1.4.1.99999
+objectIdentifier domainUserAttrs domainUserSchema:3
+objectIdentifier domainUserOCs domainUserSchema:4
+
+attributeType ( domainUserAttrs:1
+    NAME 'gender'
+    DESC 'Gender of the person'
+    EQUALITY caseIgnoreMatch
+    SUBSTR caseIgnoreSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+    SINGLE-VALUE )
+
+attributeType ( domainUserAttrs:2
+    NAME 'userAccountControl'
+    DESC 'Account control settings for the user'
+    EQUALITY integerMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.27
+    SINGLE-VALUE )
+
+attributeType ( domainUserAttrs:3
+    NAME 'userStatus'
+    DESC 'Status settings for the user'
+    EQUALITY caseIgnoreMatch
+    SUBSTR caseIgnoreSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+    SINGLE-VALUE )
+
+attributeType ( domainUserAttrs:4
+    NAME 'userStatusValidFrom'
+    DESC 'Status settings for the user'
+    EQUALITY generalizedTimeMatch
+    ORDERING generalizedTimeOrderingMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
+    SINGLE-VALUE )
+
+attributeType ( domainUserAttrs:5
+    NAME 'employeeID'
+    DESC 'Unique EmployeeID for the user'
+    EQUALITY caseIgnoreMatch
+    SUBSTR caseIgnoreSubstringsMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.15
+    SINGLE-VALUE )
+
+attributeType ( 1.3.6.1.4.1.4203.666.1.90
+    NAME 'accountExpires'
+    DESC 'Account expiration time in 100-nanosecond intervals since January 1, 1601 (UTC)'
+    EQUALITY integerMatch
+    ORDERING integerOrderingMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 )
+
+attributeType ( domainUserAttrs:7
+    NAME 'pwdLastSet'
+    DESC 'Password last changed in generalized time format'
+    EQUALITY generalizedTimeMatch
+    ORDERING generalizedTimeOrderingMatch
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.24
+    SINGLE-VALUE )
+
+objectClass ( domainUserOCs:1
+    NAME 'domainAccount'
+    DESC 'User Identity in the organization'
+    SUP top
+    STRUCTURAL
+    MUST ( cn $ sn $ uid $ employeeID $ gender $ userAccountControl $ userStatus $ userStatusValidFrom )
+    MAY ( sshPublicKey $ audio $ host $ pwdLastSet $ businessCategory $ carLicense $ departmentNumber $ description $ destinationIndicator $ displayName $ accountExpires $ employeeID $ employeeType $ facsimileTelephoneNumber $ gecos $ gidNumber $ givenName $ homeDirectory $ homePhone $ homePostalAddress $ initials $ internationaliSDNNumber $ jpegPhoto $ l $ labeledURI $ loginShell $ mail $ manager $ mobile $ o $ ou $ pager $ photo $ physicalDeliveryOfficeName $ postalAddress $ postalCode $ postOfficeBox $ preferredDeliveryMethod $ preferredLanguage $ registeredAddress $ roomNumber $ secretary $ seeAlso $ shadowExpire $ shadowInactive $ shadowLastChange $ shadowMax $ shadowMin $ shadowWarning $ st $ street $ telephoneNumber $ teletexTerminalIdentifier $ telexNumber $ title $ uidNumber $ userCertificate $ userPassword $ userPKCS12 $ userSMIMECertificate $ x121Address $ x500uniqueIdentifier ) )

@@ -1,0 +1,7 @@
+version: 1
+
+dn: uid=da,ou=KerberosPrincipals,dc=client,dc=heimdal,dc=uni-magdeburg,dc=de
+objectClass: account
+objectClass: top
+uid: da
+
