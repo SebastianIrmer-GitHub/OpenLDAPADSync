@@ -5,12 +5,12 @@
 # LDAP Domain needs to be a DNS Entry in the DNS Configuration
 # AD_DOMAIN similarly needs to be set up. Attributes need to be created in AD 
 
-LDAP_DOMAIN="openldap.uni-magdeburg.de"
+LDAP_DOMAIN="openldap.remote.uni-magdeburg.de"
 LDAP_ORG="Example Organization"
 LDAP_ADMIN_PASS="Abc1234"
 
 AD_DOMAIN="kerberos.uni-magdeburg.de"
-AD_FQDN_DOMAIN="ad100.kerberos.uni-magdeburg.de"
+AD_FQDN_DOMAIN="ads100.kerberos.uni-magdeburg.de"
 AD_PASSWORD="Abc1234"
 
 LDAP_USER_PIVOT="employeeID"
@@ -76,6 +76,8 @@ EOF
 
 sudo dpkg-reconfigure -f noninteractive slapd
 
+mkdir /var/log/openldap
+chown openldap:openldap /var/log/openldap 
 
 echo "Downloading LSC..."
 
@@ -223,7 +225,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                 <connection reference="ldap-OpenLDAP-conn" />
                 <baseDn>ou=Domain Users,$BASE_DN</baseDn>
                 <pivotAttributes>
-                    <string>$LDAP_USER_PIVOT</string>
+                    <string>$LDAP_UacSER_PIVOT</string>
                 </pivotAttributes>
                 <fetchedAttributes>
                     <string>cn</string>
@@ -238,7 +240,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                     <string>gidNumber</string>
                     <string>userStatus</string>
                     <string>userStatusValidFrom</string>
-                    <string>accountExpires</string>
+                    <string>shadowExpire</string>
                 </fetchedAttributes>
                 <getAllFilter><![CDATA[(objectClass=domainAccount)]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=domainAccount)($LDAP_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
@@ -292,6 +294,26 @@ cat <<EOF > /etc/lsc/lsc.xml
                     </forceValues>
                 </dataset>
                 <dataset>
+                    <name>accountExpires</name>
+                    <policy>KEEP</policy>
+                    <createValues>
+                        <string>
+                         <![CDATA[
+                            js:
+                            var shadowExpire = srcBean.getDatasetFirstValueById("shadowExpire")
+                            var ADexpire;
+                            if (shadowExpire === null || shadowExpire == "") {
+                                ADexpire = "9223372036854775807"
+                            } else {
+                                ADexpire = AD.unixTimestampToADTime(shadowExpire * 86400)
+                            }
+                            ADexpire
+                        ]]>
+                        </string>
+                        
+                    </createValues>
+                </dataset>
+                <dataset>
                     <name>objectclass</name>
                     <policy>KEEP</policy>
                     <createValues>
@@ -341,7 +363,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                 <string>get_dn.js</string>
             </scriptInclude>
         </task>
-     <task>
+        <task>
             <name>c-updateUsers</name>
             <bean>org.lsc.beans.SimpleBean</bean>
             <asyncLdapSourceService>
@@ -365,7 +387,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                     <string>gender</string>
                     <string>userAccountControl</string>
                     <string>userStatusValidFrom</string>
-                    <string>accountExpires</string>
+                    <string>shadowExpire</string>
                 </fetchedAttributes>
                 <getAllFilter><![CDATA[(objectClass=domainAccount)]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=domainAccount)($LDAP_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
@@ -407,6 +429,26 @@ cat <<EOF > /etc/lsc/lsc.xml
                     <create>false</create>
 
                 </conditions>
+                    <dataset>
+                    <name>accountExpires</name>
+                    <policy>KEEP</policy>
+                    <createValues>
+                        <string>
+                         <![CDATA[
+                            js:
+                            var shadowExpire = srcBean.getDatasetFirstValueById("shadowExpire")
+                            var ADexpire;
+                            if (shadowExpire === null || shadowExpire == "") {
+                                ADexpire = "9223372036854775807"
+                            } else {
+                                ADexpire = AD.unixTimestampToADTime(shadowExpire * 86400)
+                            }
+                            ADexpire
+                        ]]>
+                        </string>
+                        
+                    </createValues>
+                </dataset>
                 <dataset>
                     <name>userStatusValidFrom</name>
                     <policy>FORCE</policy>
@@ -803,7 +845,7 @@ cn: sshPublicKey
 olcAttributeTypes: ( 1.3.6.1.4.1.24552.500.1.1.1.13 NAME 'sshPublicKey'
     DESC 'MANDATORY: OpenSSH Public key'
     EQUALITY octetStringMatch
-    SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 )
+    SYNTAX 1.3.6.1.4.1.1466.115.121.1.40 ) 
 olcObjectClasses: ( 1.3.6.1.4.1.24552.500.1.1.2.0 NAME 'ldapPublicKey' SUP top AUXILIARY
     DESC 'MANDATORY: OpenSSH LPK objectclass'
     MAY ( sshPublicKey $ uid )
@@ -842,7 +884,7 @@ olcAttributeTypes: ( domainUserAttrs:4 NAME 'userStatusValidFrom' DESC 'Status s
 olcAttributeTypes: ( domainUserAttrs:5 NAME 'employeeID' DESC 'Unique EmployeeID for the user' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
 olcAttributeTypes: ( 1.3.6.1.4.1.4203.666.1.90 NAME 'accountExpires' DESC 'Account expiration time in 100-nanosecond intervals since January 1, 1601 (UTC)' EQUALITY integerMatch ORDERING integerOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 )
 olcAttributeTypes: ( domainUserAttrs:7 NAME 'pwdLastSet' DESC 'Password last changed in generalized time format' EQUALITY generalizedTimeMatch ORDERING generalizedTimeOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 SINGLE-VALUE )
-olcObjectClasses: ( domainUserOCs:1 NAME 'domainAccount' DESC 'User Identity in the organization' SUP top STRUCTURAL MUST ( cn $ sn $ uid $ employeeID $ gender $ userAccountControl $ userStatus $ userStatusValidFrom ) MAY ( sshPublicKey $ audio $ host $ pwdLastSet $ businessCategory $ carLicense $ departmentNumber $ description $ destinationIndicator $ displayName $ accountExpires $ employeeID $ employeeType $ facsimileTelephoneNumber $ gecos $ gidNumber $ givenName $ homeDirectory $ homePhone $ homePostalAddress $ initials $ internationaliSDNNumber $ jpegPhoto $ l $ labeledURI $ loginShell $ mail $ manager $ mobile $ o $ ou $ pager $ photo $ physicalDeliveryOfficeName $ postalAddress $ postalCode $ postOfficeBox $ preferredDeliveryMethod $ preferredLanguage $ registeredAddress $ roomNumber $ secretary $ seeAlso $ shadowExpire $ shadowInactive $ shadowLastChange $ shadowMax $ shadowMin $ shadowWarning $ st $ street $ telephoneNumber $ teletexTerminalIdentifier $ telexNumber $ title $ uidNumber $ userCertificate $ userPassword $ userPKCS12 $ userSMIMECertificate $ x121Address $ x500uniqueIdentifier ) )
+olcObjectClasses: ( domainUserOCs:1 NAME 'domainAccount' DESC 'User Identity in the organization' SUP top STRUCTURAL MUST ( cn $ mail $ uid $ employeeID $ ) MAY (  gender $ userAccountControl $ userStatus $ userStatusValidFrom $ sn $ sshPublicKey $ audio $ host $ pwdLastSet $ businessCategory $ carLicense $ departmentNumber $ description $ destinationIndicator $ displayName $ accountExpires $ employeeID $ employeeType $ facsimileTelephoneNumber $ gecos $ gidNumber $ givenName $ homeDirectory $ homePhone $ homePostalAddress $ initials $ internationaliSDNNumber $ jpegPhoto $ l $ labeledURI $ loginShell $ mail $ manager $ mobile $ o $ ou $ pager $ photo $ physicalDeliveryOfficeName $ postalAddress $ postalCode $ postOfficeBox $ preferredDeliveryMethod $ preferredLanguage $ registeredAddress $ roomNumber $ secretary $ seeAlso $ shadowExpire $ shadowInactive $ shadowLastChange $ shadowMax $ shadowMin $ shadowWarning $ st $ street $ telephoneNumber $ teletexTerminalIdentifier $ telexNumber $ title $ uidNumber $ userCertificate $ userPassword $ userPKCS12 $ userSMIMECertificate $ x121Address $ x500uniqueIdentifier ) )
 
 dn: cn=automountSchema,cn=schema,cn=config
 objectClass: olcSchemaConfig
@@ -1032,6 +1074,38 @@ ou: Users
 ouID: 5
 ouParentID: 0
 
+dn: ou=Klinik,$BASE_DN
+objectClass: organizationalUnit
+objectClass: top
+objectClass: customOU
+ou: Users
+ouID: 14
+ouParentID: 0
+
+dn: ou=Institut,$BASE_DN
+objectClass: organizationalUnit
+objectClass: top
+objectClass: customOU
+ou: Users
+ouID: 13
+ouParentID: 0
+
+dn: ou=ZE,$BASE_DN
+objectClass: organizationalUnit
+objectClass: top
+objectClass: customOU
+ou: Users
+ouID: 12
+ouParentID: 0
+
+dn: ou=EXT,$BASE_DN
+objectClass: organizationalUnit
+objectClass: top
+objectClass: customOU
+ou: Users
+ouID: 11
+ouParentID: 0
+
 dn: ou=Groups,$BASE_DN
 objectClass: organizationalUnit
 objectClass: top
@@ -1048,10 +1122,10 @@ groupType: 2
 uniqueGroupID: dd
 memberURL: ldap:///ou=Domain Users,$BASE_DN??sub?(objectClass=domainAccount)
 
-dn: cn=Test User,ou=Domain Users,$BASE_DN
+dn: cn=testuser123,ou=Domain Users,$BASE_DN
 objectClass: domainAccount
 objectClass: top
-cn: Test User
+cn: testuser123
 employeeID: 12345
 gender: M
 sn: User
@@ -1062,11 +1136,12 @@ userStatusValidFrom: 20240721100000Z
 seeAlso: cn=Test User,ou=Domain Users,dc=kerberos,dc=uni-magdeburg,dc=de
 uidNumber: 1001
 gidNumber: 1002
+mail: user@mail
 
-dn: cn=Test User1,ou=Domain Users,$BASE_DN
+dn: cn=testuser1234,ou=Domain Users,$BASE_DN
 objectClass: domainAccount
 objectClass: top
-cn: Test User1
+cn: testuser123
 employeeID: 123
 gender: M
 sn: User
@@ -1077,6 +1152,23 @@ userStatusValidFrom: 20240721100000Z
 userPassword: {SASL}testuser123@$AD_DOMAIN
 uidNumber: 1002
 gidNumber: 1002
+mail: user1@mail
+
+dn: cn=testuser1234,ou=Domain Users,$BASE_DN
+objectClass: domainAccount
+objectClass: top
+cn: testuser123
+employeeID: 123
+gender: M
+sn: User
+uid: testuser1234
+userAccountControl: 512
+userStatus: active
+userStatusValidFrom: 20240721100000Z
+userPassword: {SASL}testuser123@$AD_DOMAIN
+uidNumber: 1002
+gidNumber: 1002
+mail: user1@mail
 
 dn: ou=sudo,$BASE_DN
 objectClass: customOU
@@ -1258,8 +1350,8 @@ EOF
 
 #### Python script sync-ous.py can be used with these credentials 
 
-# Test User kann getestet werden durch: ldapsearch -x -D "cn=Test User,ou=Domain Users,dc=op,dc=uni-magdeburg,dc=de" -w $AD_PASSWORD
-# Test User1 kann getestet werden durch: ldapsearch -x -D "cn=Test User1,ou=Domain Users,dc=op,dc=uni-magdeburg,dc=de" -w $AD_PASSWORD
+# testuser123 kann getestet werden durch: ldapsearch -x -D "cn=testuser123,ou=Domain Users,dc=op,dc=uni-magdeburg,dc=de" -w $AD_PASSWORD
+# testuser1234 kann getestet werden durch: ldapsearch -x -D "cn=testuser1234,ou=Domain Users,dc=op,dc=uni-magdeburg,dc=de" -w $AD_PASSWORD
 # solange keine Meldung wie Invalid Credentials kommt, hat der Nutzer sich erfolgreich authentifiziert. 
 
 # Credentials werden nicht automatisch erstellt. 
@@ -1269,3 +1361,306 @@ openssl s_client -connect $AD_DOMAIN:636 -showcerts < /dev/null | sed -ne '/-BEG
 cp ad_cert.pem /usr/local/share/ca-certificates/ad_cert.crt
 
 update-ca-certificates
+
+sudo hostnamectl set-hostname $LDAP_DOMAIN
+
+cat <<EOF > /etc/lsc/python-sync.py
+#!/usr/bin/env python3
+
+import traceback
+from ldap3 import Server, Connection, ALL, SUBTREE
+import yaml
+import logging
+from colorlog import ColoredFormatter
+
+def setup_logger(name, log_file):
+    """Configures and returns a colored logger with the given name."""
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    ch = logging.StreamHandler()
+    fh = logging.FileHandler(log_file)
+
+    formatter = ColoredFormatter(
+        "%(log_color)s%(asctime)s.%(msecs)03d - %(levelname)-8s%(reset)s -  %(blue)s%(message)s",
+        datefmt='%Y-%m-%d %H:%M:%S',
+        reset=True,
+        log_colors={
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'red,bg_white',
+        },
+        secondary_log_colors={},
+        style='%'
+    )
+
+    file_formatter = logging.Formatter(
+        "%(asctime)s.%(msecs)03d - %(levelname)-8s - %(message)s",
+        datefmt='%Y-%m-%d %H:%M:%S',
+        style='%'
+    )
+
+    ch.setFormatter(formatter)
+    fh.setFormatter(file_formatter)
+    logger.addHandler(ch)
+    logger.addHandler(fh)
+
+    return logger
+
+# Load configuration from the YAML file
+with open('/etc/lsc/ou-sync.yaml', 'r') as file:
+    config = yaml.safe_load(file)
+
+# Extract source and target configurations
+source_config = config['source']
+target_config = config['target']
+
+# Set up logging
+logger = setup_logger('ou_sync', '/var/log/ou_sync.log')
+
+def get_all_ous(config):
+    """
+    Retrieve all organizational units (OUs) from an LDAP server.
+
+    :param config: Dictionary containing server URI, bind DN, bind password, and search base
+    :return: List of tuples containing OU name, distinguished name, ouID, and ouParentID
+    """
+    server = Server(config['server_uri'], get_info=ALL)
+    ous = []
+    try:
+        with Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn:
+            search_base = f"{config['search_base']}"
+            search_filter = '(objectClass=customOU)'
+            attributes = ['ou', 'ouID', 'ouParentID', 'distinguishedName']
+
+            if conn.search(search_base, search_filter, attributes=attributes, search_scope=SUBTREE):
+                for entry in conn.entries:
+                    ou_name = entry.ou.value if entry.ou else "Unknown OU"
+                    dn = entry.entry_dn
+                    ou_id = entry.ouID.value if entry.ouID else None
+                    ou_parent_id = entry.ouParentID.value if entry.ouParentID else None
+                    ous.append((ou_name, dn, ou_id, ou_parent_id))
+                    logger.info(f"Retrieved OU: {ou_name} with DN: {dn}")
+            else:
+                logger.warning("No entries found.")
+    except Exception as e:
+        logger.error(f"LDAP error during OU retrieval: {str(e)}")
+        logger.debug(traceback.format_exc())
+
+    return ous
+
+def get_all_target_ous(config):
+    """
+    Retrieve all OUs from the target LDAP server.
+
+    :param config: Dictionary containing server URI, bind DN, bind password, and search base
+    :return: List of distinguished names of OUs
+    """
+    server = Server(config['server_uri'], get_info=ALL)
+    ous = []
+    try:
+        with Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn:
+            search_base = config['search_base']
+            search_filter = '(objectClass=organizationalUnit)'
+            attributes = ['distinguishedName']
+
+            if conn.search(search_base, search_filter, attributes=attributes, search_scope=SUBTREE):
+                for entry in conn.entries:
+                    dn = entry.entry_dn
+                    ous.append(dn)
+                    logger.info(f"Retrieved target OU with DN: {dn}")
+            else:
+                logger.warning("No entries found.")
+    except Exception as e:
+        logger.error(f"LDAP error during target OU retrieval: {str(e)}")
+        logger.debug(traceback.format_exc())
+
+    return ous
+
+def move_ou(config, old_dn, new_dn, ou_name):
+    """
+    Move an OU to a new distinguished name.
+
+    :param config: Dictionary containing server URI, bind DN, bind password
+    :param old_dn: Current distinguished name of the OU
+    :param new_dn: New distinguished name for the OU
+    :param ou_name: Name of the OU
+    """
+    server = Server(config['server_uri'], get_info=ALL)
+    ou_name = f"ou={ou_name}"
+    new_dn = new_dn.replace(f"{ou_name},", "")
+    try:
+        with Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn:
+            if conn.modify_dn(old_dn, ou_name, new_superior=new_dn):
+                logger.info(f"Moved OU {ou_name} from {old_dn} to {new_dn}")
+            else:
+                logger.warning(f"Failed to move OU {ou_name} from {old_dn} to {new_dn}")
+    except Exception as e:
+        logger.error(f"LDAP error during OU move: {str(e)}")
+        logger.debug(traceback.format_exc())
+
+def convert_specific_parts_to_lowercase(dn):
+    """
+    Convert only the CN=, DC=, and OU= parts of a distinguished name (DN) to lowercase.
+
+    :param dn: Distinguished name to convert
+    :return: DN with specified parts converted to lowercase
+    """
+    parts = dn.split(',')
+    lowercase_parts = []
+    for part in parts:
+        if part.strip().startswith('CN='):
+            lowercase_parts.append('cn=' + part[3:])
+        elif part.strip().startswith('DC='):
+            lowercase_parts.append('dc=' + part[3:])
+        elif part.strip().startswith('OU='):
+            lowercase_parts.append('ou=' + part[3:])
+        else:
+            lowercase_parts.append(part)
+    return ','.join(lowercase_parts)
+
+def ou_exist_under_base(config, base_dn, ou_id):
+    """
+    Check if an OU exists under a specific base DN.
+
+    :param config: Dictionary containing server URI, bind DN, bind password
+    :param base_dn: Base distinguished name to search under
+    :param ou_id: ID of the OU to check for
+    :return: Tuple containing a boolean indicating existence and the DN if it exists
+    """
+    server = Server(config['server_uri'], get_info=ALL)
+    try:
+        with Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn:
+            search_filter = f'(&(objectClass=organizationalUnit)(ouID={ou_id}))'
+            conn.search(search_base=base_dn, search_filter=search_filter, search_scope=SUBTREE)
+            
+            if len(conn.entries) > 0:
+                dn = conn.entries[0].entry_dn
+                logger.info(f"OU with ID {ou_id} exists under base DN {base_dn}")
+                return True, dn
+            else:
+                logger.info(f"OU with ID {ou_id} does not exist under base DN {base_dn}")
+                return False, None
+    except Exception as e:
+        logger.error(f"LDAP error during OU existence check: {str(e)}")
+        logger.debug(traceback.format_exc())
+        return False, None
+
+def create_ou_if_not_exists(config, ou_name, distinguished_name, ou_id, ou_parent_id):
+    """
+    Create an OU in the target LDAP server if it does not already exist.
+
+    :param config: Dictionary containing server URI, bind DN, bind password, and search base
+    :param ou_name: Name of the OU to create
+    :param distinguished_name: Distinguished name of the OU in the source LDAP
+    """
+    server = Server(config['server_uri'], get_info=ALL)
+    target_base = config['search_base']
+    new_target_dn = distinguished_name.replace(source_config['search_base'], target_base)
+    base_dn = f"{target_base}"
+    new_target_dn = convert_specific_parts_to_lowercase(new_target_dn)
+    try:
+        with (Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn):
+            if ou_name == "sudo" or ou_name == "automount" or ou_name == "Users":
+                logger.info(f"Skipping creation for special OU: {ou_name}")
+                return
+            
+            ou_exists, existing_target_dn = ou_exist_under_base(config, base_dn, ou_id)
+            
+            if ou_exists:
+                existing_target_dn = convert_specific_parts_to_lowercase(existing_target_dn)
+                if new_target_dn == existing_target_dn:
+                    logger.info(f"OU {ou_name} already exists with DN {new_target_dn}")
+                else:
+                    move_ou(config, existing_target_dn, new_target_dn, ou_name)
+            else:
+                attributes = {
+                    'objectClass': ['organizationalUnit'],
+                    'ou': ou_name,
+                    'ouID': str(ou_id),
+                    'ouParentID': str(ou_parent_id)
+                }
+                conn.add(new_target_dn, attributes=attributes)
+                if conn.result['result'] == 0:
+                    logger.info(f"Successfully added OU {ou_name} with DN {new_target_dn}")
+                else:
+                    logger.error(f"Failed to add OU {new_target_dn} to {config['server_uri']}. Error: {conn.result}")
+    except Exception as e:
+        logger.error(f"LDAP error during OU creation: {str(e)}")
+        logger.debug(traceback.format_exc())
+
+def synchronize_ous(source_config, target_config):
+    """
+    Synchronize OUs from the source LDAP server to the target LDAP server.
+
+    :param source_config: Dictionary containing source server URI, bind DN, bind password, and search base
+    :param target_config: Dictionary containing target server URI, bind DN, bind password, and search base
+    """
+    source_ous = get_all_ous(source_config)
+
+    # Synchronize OUs from source to target
+    for ou_name, dn, ou_id, ou_parent_id in source_ous:
+        create_ou_if_not_exists(target_config, ou_name, dn, ou_id, ou_parent_id)
+
+if __name__ == "__main__":
+    logger.info("Starting OU creation and modify.")
+    synchronize_ous(source_config, target_config)
+    logger.info("OUs created and modified.")
+EOF
+
+cat << "EOF" > /etc/lsc/audit-log-checker.sh
+#!/bin/bash
+
+AUDIT_LOG="/var/log/openldap/auditlog.log"
+LAST_POSITION_FILE="/var/log/openldap/auditlog.log.position"
+
+echo "Starting script at $(date)"
+
+# Read the last processed position
+if [ -f "$LAST_POSITION_FILE" ]; then
+  last_position=$(cat "$LAST_POSITION_FILE")
+  echo "Last position read from file: $last_position"
+else
+  last_position=0
+  echo "No position file found, starting from position 0"
+fi
+
+current_size=$(stat -c%s "$AUDIT_LOG")
+echo "Current size of audit log: $current_size"
+
+if [ "$current_size" -gt "$last_position" ]; then
+  new_entries=$(tail -c +$((last_position + 1)) "$AUDIT_LOG")
+  
+  if echo "$new_entries" | grep -qE "modifyTimestamp|changetype: delete|changetype: modrdn"; then
+    echo "Changes detected, triggering LSC sync..."
+    python3 /etc/lsc/python-sync.py
+    lsc -s all
+    lsc -s all
+    lsc -c all
+  fi
+  
+  echo "$current_size" > "$LAST_POSITION_FILE"
+  echo "Updated last position to: $current_size"
+else
+  echo "No new entries in the audit log"
+fi
+
+echo "$(date): Script completed"
+EOF
+
+echo "Script /etc/lsc/audit-log-checker.sh created successfully"
+chmod +x /etc/lsc/audit-log-checker.sh
+
+# for testing purposes, these run every minute. 
+AUDIT_CRON_JOB="* * * * * /usr/bin/env /etc/lsc/audit-log-checker.sh >> /var/log/ldap-sync.log 2>&1"
+DAILY_CLEAN_TASK="* * * * * /usr/bin/env lsc -c all >> /var/log/ldap-clean.log 2>&1"
+
+(crontab -l 2>/dev/null | grep -F "$AUDIT_CRON_JOB" >/dev/null) || (crontab -l 2>/dev/null; echo "$AUDIT_CRON_JOB") | crontab -
+(crontab -l 2>/dev/null | grep -F "$DAILY_CLEAN_TASK" >/dev/null) || (crontab -l 2>/dev/null; echo "$DAILY_CLEAN_TASK") | crontab -
+
+echo "1. lsc -c all runs every hour and logs to /var/log/lsc-cron.log"
+
+# PYTHON_CRON_JOB="* * * * * /usr/bin/env python3 /etc/lsc/python-sync.py >> /var/log/python-sync-cron.log 2>&1"
+# (crontab -l 2>/dev/null | grep -F "$PYTHON_CRON_JOB" >/dev/null) || (crontab -l 2>/dev/null; echo "$PYTHON_CRON_JOB") | crontab -
