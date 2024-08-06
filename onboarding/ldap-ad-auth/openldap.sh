@@ -5,7 +5,7 @@
 # LDAP Domain needs to be a DNS Entry in the DNS Configuration
 # AD_DOMAIN similarly needs to be set up. Attributes need to be created in AD 
 
-LDAP_DOMAIN="openldap.remote.uni-magdeburg.de"
+LDAP_DOMAIN="openldap.uni-magdeburg.de"
 LDAP_ORG="Example Organization"
 LDAP_ADMIN_PASS="Abc1234"
 

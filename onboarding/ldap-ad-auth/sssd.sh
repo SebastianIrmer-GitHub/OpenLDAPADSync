@@ -84,17 +84,7 @@ override_shell = /bin/bash
 override_homedir = /home/%u
 
 
-autofs_provider = ldap
-ldap_autofs_search_base = ou=automount,$BASE_DN
-ldap_autofs_map_object_class = automountMap
-ldap_autofs_entry_object_class = automount
-ldap_autofs_map_name = ou
-ldap_autofs_entry_key = cn
-ldap_autofs_entry_value = automountInformation
-
 [sudo]
-
-[autofs]
 EOF
 
 # Secure the SSSD configuration file
