@@ -134,7 +134,7 @@ ksetup /addkdc HEIMDAL.UNI-MAGDEBURG.DE $HEIMDAL_SERVER_DNS
 ksetup /addhosttorealmmap <HOST-FQDN> HEIMDAL.UNI-MAGDEBURG.DE
 ksetup /addhosttorealmmap $HEIMDAL_SERVER_DNS HEIMDAL.UNI-MAGDEBURG.DE
 ```
-Für die Befehle werden Administrator-Rechte benötigt
+Für die Befehle werden Administrator-Rechte benötigt.
 #### Ausfallsicherheit
 
 Die Ausfallsicherheit wurde nur für den Kerberos Realm getestet, da die Replikation beziehungsweise Synchronisation andersweitig erläutert wird. 
@@ -201,8 +201,8 @@ sudo chown <currentuser>: admin.keytab
 Python Onboarding Skript ausführen
 /onboarding/cross-realm/python_script.sh
 
-in die Ordner kadmin und kerberosservice die nötigen Dateien
-
+Normalerweise sollte das ausreichen. Sonst die nötigen Dateien hinzufügen:
+```
 kadmin:
     - setup.py
     - kadmin_interface_wrapper.c
@@ -218,7 +218,7 @@ py:
 installieren.
 
 source /<env>/bin/activate
-
+```
 
 Dahin navigieren, wo gespeichert die jeweiligen setup.py mit C-Bibliothek Dateien gespeichert sind:
 
