@@ -1183,19 +1183,6 @@ function convertOpenLDAPToAD(openldapTimestamp) {
     return openldapTimestamp;
 }
 
-
-function getAccountExpires(ldapTimestamp) {
-    // Constants for conversion
-
-
-    // Check if ldapTimestamp is empty or null
-    if (!ldapTimestamp) {
-        return "9223372036854775807";
-    }
-
-    return ldapTimestamp
-
-}
 EOF
 echo "Verifying OpenLDAP installation..."
 
