@@ -78,11 +78,13 @@ Ein OpenLDAP Server kann durch das OpenLDAP Onboarding Skript aus [`onboarding/l
 
 #### Client Installation 
 *Linux*
+
 Auf Linux kann das Onboarding-Skript ausgeführt werden. Davor müssen die Einstellungen in diesem angepasst werden. 
 
 Für macOS muss der Server unter Benutzer eingeschrieben werden. Dabei kann die IP-Adresse oder die DNS verwendet werden. Es muss die RFC-Option gewählt werden und der Suchbereich muss dabei angegeben werden.  Die Mappings müssen entsprechend angepasst werden. Unter Users muss domainAccount als Objektklasse hinzugefügt werden. Dann wird unter Sicherheit der LDAP-Bind-Nutzer mit dem Passwort angegeben. Der Nutzer muss als DN angegeben werden. 
 
 *macOS*
+
 Der SASL Mechansmus CRAM-MD5 muss deaktiviert werden durch. Dabei auf Mojave mit dem Skript:
 ```s
 for m in CRAM-MD5; do /usr/libexec/PlistBuddy -c "add ':module options:ldap:Denied SASL Methods:' string $m" /Library/Preferences/OpenDirectory/Configurations/LDAPv3/<LDAP_DNS/IP>.plist
@@ -94,6 +96,7 @@ sudo odutil set configuration /LDAPv3/<LDAP_DNS/IP> module ldap option "Denied S
 ```
 
 *Windows*
+
 Computer können standardmäßig an die AD-Domäne angeschlossen werden. Durch pGina können diese auch an OpenLDAP angeschlossen werden.
 
 Dabei sollten Authentifikation und Gateway für lokale Maschinen und OpenLDAP aktiviert sein. Unter LDAP muss ein Bind-Nutzer angegeben werden, mit DN und Passwort. 
@@ -114,6 +117,7 @@ Das python Skript kann alle Python Funktionen automatisch erstellen. Es muss als
 
 #### Client Installation 
 *Linux*
+
 Auf Linux kann das Onboarding-Skript ausgeführt werden. Davor müssen die Einstellungen in diesem angepasst werden. 
 
 *macOS*
@@ -122,6 +126,7 @@ Für macOS muss der Server unter Benutzer eingeschrieben werden. Dabei kann die 
 
 
 *Windows*
+
 Windows Geräte können nur an die Active Directory Domäne angebunden werden. Ein Beispiel der Gruppenrichtlinien ist unter GPO.html zu sehen.
 Sonst wird der KDC durch folgende Befehle auf den Clients eingerichtet:
 ```s
