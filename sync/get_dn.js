@@ -33,9 +33,3 @@ function convertOpenLDAPToAD(openldapTimestamp) {
     // Return the original timestamp if it doesn't end with 'Z'
     return openldapTimestamp;
 }
-
-
-function getDelete(identifier) {
-    var regex = /CN=Users/;
-    return containsSubstring = str.match(regex) !== null;
-}

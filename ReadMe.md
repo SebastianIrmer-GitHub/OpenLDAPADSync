@@ -107,7 +107,7 @@ Unter Suchbereich werden die Suchbereiche festgelegt, dabei sollte die zweite Ve
 
 #### OpenLDAP Installation
 
-Ein OpenLDAP Server kann durch das Onboarding Skript aus [`onboarding/cross-realm`](onboarding/cross-realm/openldap_vorgeschlagent.sh) installiert werden. *Vorgeschlagen ist dabei die getrennte Konfiguration von Nutzern und Gruppen* 
+Ein OpenLDAP Server kann durch das Onboarding Skript aus [`onboarding/cross-realm`](onboarding/cross-realm/openldap_vorgeschlagent.sh) installiert werden. *Vorgeschlagen ist die Konfiguration wobe  Nutzern und Gruppen getrennt sind.* 
 
 
 #### Kerberos Installation 
