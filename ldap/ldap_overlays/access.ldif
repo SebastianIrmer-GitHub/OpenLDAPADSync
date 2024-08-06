@@ -1,0 +1,35 @@
+# sudo nano /etc/apparmor.d/usr.sbin.slapd
+
+# /var/lib/ldap/accesslog/* rw,
+
+# sudo apparmor_parser -r /etc/apparmor.d/usr.sbin.slapd
+
+dn: cn=module{0},cn=config
+changetype: modify
+add: olcModuleLoad
+olcModuleLoad: accesslog.la
+
+dn: olcDatabase={2}mdb,cn=config
+objectClass: olcDatabaseConfig
+objectClass: olcMdbConfig
+olcDatabase: mdb
+olcDbDirectory: /var/lib/ldap/accesslog
+olcSuffix: cn=accesslog
+olcRootDN: cn=admin,cn=accesslog
+olcRootPW: auditor_password
+olcDbIndex: default eq
+olcDbIndex: entryCSN,objectClass,reqEnd,reqResult,reqStart
+
+dn: olcOverlay=accesslog,olcDatabase={1}mdb,cn=config
+changetype: add
+objectClass: olcOverlayConfig
+objectClass: olcAccessLogConfig
+olcOverlay: accesslog
+olcAccessLogDB: cn=accesslog
+olcAccessLogOps: all 
+olcAccessLogSuccess: FALSE
+olcAccessLogOld: cn=accesslog,dc=client,dc=heimdal,dc=uni-magdeburg,dc=de
+olcAccessLogPurge: 1+00:00 01:00
+
+
+# ldapsearch -x -LLL -D "cn=admin,cn=accesslog" -w auditor_password -b "cn=accesslog" -s sub "(reqType=bind)"

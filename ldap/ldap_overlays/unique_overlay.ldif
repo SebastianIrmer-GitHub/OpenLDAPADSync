@@ -1,0 +1,16 @@
+dn: cn=module{0},cn=config
+changetype: modify
+add: olcModuleLoad
+olcModuleLoad: unique.la
+
+dn: olcOverlay=unique,olcDatabase={1}mdb,cn=config
+changetype: add
+objectClass: olcOverlayConfig
+objectClass: olcUniqueConfig
+olcOverlay: unique
+olcUniqueAttribute: employeeID 
+olcUniqueAttribute: ouID
+olcUniqueAttribute: ouParentID
+olcUniqueAttribute: uniqueGroupID
+# olcUniqueAttribute: uid
+
