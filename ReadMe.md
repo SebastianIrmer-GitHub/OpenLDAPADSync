@@ -222,7 +222,7 @@ installieren.
 source /<env>/bin/activate
 ```
 
-Dahin navigieren, wo jeweiligen setup.py-Datein gespeichert sind:
+Dahin navigieren, wo jeweiligen setup.py-Dateien gespeichert sind:
 
     1. pip setup.py build
     2. pip install .
@@ -257,7 +257,9 @@ Damit die Synchronisation vollständig funktionieren kann, müssen die Attribute
     - uniqueGroupID
         - Unicode String
         - Random OID
-Dann entweder den Active Directory Domain Service Dienst neustarten oder den Server neustarten. 
+
+Dann entweder den Active Directory Domain Service Dienst oder den Server neu starten. 
+
 
 #### LDAPS Setup
 Rolle: AD Certificate Authority
