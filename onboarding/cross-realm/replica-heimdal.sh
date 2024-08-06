@@ -75,9 +75,9 @@ sudo bash -c "cat > /etc/krb5.conf" <<EOF
 EOF
 
 # Check if ports 754 and 88 are already in /etc/heimdal-kdc/kdc.conf under [kdc]
-if ! grep -q "ports = 754, 88, 454" /etc/heimdal-kdc/kdc.conf; then
-    echo "Configuring /etc/heimdal-kdc/kdc.conf to listen on ports 754, 454 and 88..."
-    sudo awk '/\[kdc\]/ { print; print "    ports = 754, 88, 454"; next }1' /etc/heimdal-kdc/kdc.conf > /etc/heimdal-kdc/kdc.conf.new
+if ! grep -q "ports = 754, 88, 464" /etc/heimdal-kdc/kdc.conf; then
+    echo "Configuring /etc/heimdal-kdc/kdc.conf to listen on ports 754, 464 and 88..."
+    sudo awk '/\[kdc\]/ { print; print "    ports = 754, 88, 464"; next }1' /etc/heimdal-kdc/kdc.conf > /etc/heimdal-kdc/kdc.conf.new
     sudo mv /etc/heimdal-kdc/kdc.conf.new /etc/heimdal-kdc/kdc.conf
 else
     echo "Ports are already configured in /etc/heimdal-kdc/kdc.conf"
