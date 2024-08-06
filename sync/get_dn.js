@@ -34,3 +34,8 @@ function convertOpenLDAPToAD(openldapTimestamp) {
     return openldapTimestamp;
 }
 
+
+function getDelete(identifier) {
+    var regex = /CN=Users/;
+    return containsSubstring = str.match(regex) !== null;
+}

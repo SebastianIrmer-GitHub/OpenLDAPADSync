@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 import random
 import string
 from ldap3 import Server, Connection, ALL, MODIFY_ADD
@@ -14,16 +14,11 @@ target_bind_dn = config['source']['bind_dn']
 target_bind_password = config['source']['bind_password']
 target_base_dn = f"{config['source']['search_base']}"
 
-
 status_of_user = ['Rentner', 'Aktiv', 'Ruhend', 'Ausgetreten']
 gender_of_user = ['male', 'female', 'other']
 
 type_of_dist_group = ['2', '4', '8']
 type_of_sec_group = ['-2147483646', '-2147483644', '-2147483640']
-
-
-# 2 - Global, 4 - Local 8 - Universal
-# -2147483646 - Global, -2147483644 - Local, -2147483640 - Universal
 
 def generate_random_string(length=8):
     """
@@ -34,7 +29,6 @@ def generate_random_string(length=8):
     """
     letters_and_digits = string.ascii_letters + string.digits
     return ''.join(random.choice(letters_and_digits) for _ in range(length))
-
 
 def create_ou(server_uri, bind_dn, bind_password, ou_name, parent_dn):
     """
@@ -53,7 +47,6 @@ def create_ou(server_uri, bind_dn, bind_password, ou_name, parent_dn):
         with Connection(server, bind_dn, bind_password, auto_bind=True) as conn:
             # Search for the parent OU's ouID
             if parent_dn:
-
                 conn.search(parent_dn, '(objectClass=customOU)', attributes=['ouID'])
                 if conn.entries:
                     parent_ou_id = conn.entries[0].ouID.value
@@ -80,7 +73,6 @@ def create_ou(server_uri, bind_dn, bind_password, ou_name, parent_dn):
     except Exception as e:
         print("LDAP error:", str(e))
 
-
 def search_users(server_uri, bind_dn, bind_password, search_base, object_classes):
     """
     Search for users in the LDAP directory.
@@ -100,13 +92,10 @@ def search_users(server_uri, bind_dn, bind_password, search_base, object_classes
             conn.search(search_base, search_filter, attributes=['uid'])
             for entry in conn.entries:
                 user_dns.append(entry.entry_dn)
-
-
     except Exception as e:
         print("LDAP error during search:", str(e))
 
     return user_dns
-
 
 def move_user(server_uri, bind_dn, bind_password, user_dn, new_ou_dn):
     """
@@ -137,7 +126,6 @@ def move_user(server_uri, bind_dn, bind_password, user_dn, new_ou_dn):
     finally:
         conn.unbind()
 
-
 def generate_and_add_ous(num_ous, server_uri, bind_dn, bind_password, base_dn):
     """
     Generate and add multiple OUs to the LDAP directory.
@@ -167,7 +155,6 @@ def generate_and_add_ous(num_ous, server_uri, bind_dn, bind_password, base_dn):
                 ou_dns.append(additional_ou_dn)
     return ou_dns
 
-
 def create_group(server_uri, bind_dn, bind_password, base_dn, cn, group_type):
     group_dn = f"cn={cn},{base_dn}"
 
@@ -195,7 +182,6 @@ def create_group(server_uri, bind_dn, bind_password, base_dn, cn, group_type):
         print("LDAP error:", str(e))
         return None, None
 
-
 def add_user(server_uri, bind_dn, bind_password, base_dn, uid, cn, sn):
     """
     Add a user to the LDAP directory.
@@ -209,15 +195,14 @@ def add_user(server_uri, bind_dn, bind_password, base_dn, uid, cn, sn):
     :param sn: Surname of the user
     :return: None
     """
-    AD_EPOCH = datetime.datetime(1601, 1, 1)
-    user_dn = f'uid={uid},{base_dn}'
-    current_time = datetime.datetime.utcnow()
-    expiration_time = current_time + datetime.timedelta(days=10)
+    user_dn = f'cn={cn},{base_dn}'
+    
 
-    # Calculate the expiration time in AD format (100-nanosecond intervals since AD_EPOCH)
-    expiration_time_ad = (expiration_time - AD_EPOCH).total_seconds() * 10 ** 7
-    expiration_time_ad = int(expiration_time_ad)
-
+    current_time = datetime.now()
+    
+    epoch = datetime(1970, 1, 1)
+    shadow_expire_days = (current_time + timedelta(weeks=1) - epoch).days
+    
     # Format current time as a string
     current_time_str = current_time.strftime('%Y%m%d%H%M%SZ')
 
@@ -235,7 +220,8 @@ def add_user(server_uri, bind_dn, bind_password, base_dn, uid, cn, sn):
         'userStatus': random.choice(status_of_user),
         'userStatusValidFrom': current_time_str,
         'userAccountControl': 512,
-        'accountExpires': expiration_time_ad
+        'shadowExpire': str(shadow_expire_days),
+        'mail': f"{uid}@mail"
     }
 
     server = Server(server_uri, get_info=ALL)
@@ -250,7 +236,6 @@ def add_user(server_uri, bind_dn, bind_password, base_dn, uid, cn, sn):
                 print(f"Failed to add user {uid}: {result['description']} - {result['message']}")
     except Exception as e:
         print("LDAP error:", str(e))
-
 
 def generate_and_add_users(num_users, server_uri, bind_dn, bind_password, base_dn, kdc_exist):
     """
@@ -283,7 +268,6 @@ def generate_and_add_users(num_users, server_uri, bind_dn, bind_password, base_d
             except subprocess.CalledProcessError as e:
                 print(f"Error occurred while adding Kerberos principal for {uid}: {e.output}")
 
-
 def distribute_users_among_ous(server_uri, bind_dn, bind_password, users, ou_dns):
     """
     Distribute users among the created OUs.
@@ -298,7 +282,6 @@ def distribute_users_among_ous(server_uri, bind_dn, bind_password, users, ou_dns
     for user_dn in users:
         new_ou_dn = random.choice(ou_dns)
         move_user(server_uri, bind_dn, bind_password, user_dn, new_ou_dn)
-
 
 def generate_and_add_groups(server_uri, bind_dn, bind_password, base_dn, num_dist_groups, num_sec_groups):
     dist_group_dns = []
@@ -318,7 +301,6 @@ def generate_and_add_groups(server_uri, bind_dn, bind_password, base_dn, num_dis
 
     return dist_group_dns, sec_group_dns
 
-## ÜBERARBEITEN BY LDAP URL
 def add_members_to_groups(server_uri, bind_dn, bind_password, users, dist_groups, sec_groups):
     """
     Add random members to the created groups, ensuring the constraints for group memberships are met.
@@ -371,45 +353,70 @@ def add_members_to_groups(server_uri, bind_dn, bind_password, users, dist_groups
                     print(f"User {group_dn} added successfully")
                 else:
                     print(f"Failed to add user {group_dn}: {result['description']} - {result['message']}")
-
-
     except Exception as e:
         print("LDAP error while adding members:", str(e))
 
+def create_ummd_ous(server_uri, bind_dn, bind_password, base_dn, num_users, num_dist_groups, num_sec_groups):
+    """
+    Create predefined OUs under the given base DN, and add users, groups, and additional OUs under them.
+
+    :param server_uri: URI of the LDAP server
+    :param bind_dn: DN to bind with
+    :param bind_password: Password to bind with
+    :param base_dn: Base DN under which to create the OUs
+    :param num_users: Number of users to create under each OU
+    :param num_dist_groups: Number of distribution groups to create
+    :param num_sec_groups: Number of security groups to create
+    :return: None
+    """
+    ou_names = ["Klinik", "Institut", "ZE", "EXT"]
+    all_user_dns = []
+    all_ou_dns = []
+
+    for ou_name in ou_names:
+        ou_dn = f'ou={ou_name},{base_dn}'
+        create_ou(server_uri, bind_dn, bind_password, ou_name, base_dn)
+        ou_dns = generate_and_add_ous(2, server_uri, bind_dn, bind_password, ou_dn)
+        all_ou_dns.extend(ou_dns)
+        
+        generate_and_add_users(num_users, server_uri, bind_dn, bind_password, ou_dn, False)
+        user_dns = search_users(server_uri, bind_dn, bind_password, ou_dn, ['domainAccount'])
+        all_user_dns.extend(user_dns)
+        
+        dist_groups, sec_groups = generate_and_add_groups(server_uri, bind_dn, bind_password, ou_dn, num_dist_groups, num_sec_groups)
+        add_members_to_groups(server_uri, bind_dn, bind_password, user_dns, dist_groups, sec_groups)
+    
+    distribute_users_among_ous(server_uri, bind_dn, bind_password, all_user_dns, all_ou_dns)
 
 if __name__ == "__main__":
-    # Generate and add 20 users
-
     parser = argparse.ArgumentParser(description='LDAP User and OU Management')
     parser.add_argument('-kdc_exist', type=int, required=False, help='Check if KDC exists (1/0)')
+    parser.add_argument('--ummd', action='store_true', help='Create UMMD OUs')
 
     args = parser.parse_args()
     if args.kdc_exist:
         kdc_exist = bool(args.kdc_exist)
     else:
         kdc_exist = False
+
     target_user_dn = f"ou=Domain Users,{target_base_dn}"
-    ou_dns = generate_and_add_ous(5, target_server_uri, target_bind_dn, target_bind_password, target_user_dn)
 
-    generate_and_add_users(50, target_server_uri, target_bind_dn, target_bind_password, target_user_dn, False)
+    if args.ummd:
+        create_ummd_ous(target_server_uri, target_bind_dn, target_bind_password, target_base_dn, 50, 3, 5)
+    else:
+        ou_dns = generate_and_add_ous(5, target_server_uri, target_bind_dn, target_bind_password, target_user_dn)
+        generate_and_add_users(50, target_server_uri, target_bind_dn, target_bind_password, target_user_dn, kdc_exist)
 
-    # Generate and add 7 OUs
-    object_classes = ['domainAccount']
+        object_classes = ['domainAccount']
+        user_dns = search_users(target_server_uri, target_bind_dn, target_bind_password, target_user_dn, object_classes)
+        print(f"Found users: {user_dns}")
+        print(f"Total number of users: {len(user_dns)}")
 
-    # Search for users in the base DN
-    user_dns = search_users(target_server_uri, target_bind_dn, target_bind_password, target_user_dn, object_classes)
-    print(f"Found users: {user_dns}")
-    print(f"Total number of users: {len(user_dns)}")
+        distribute_users_among_ous(target_server_uri, target_bind_dn, target_bind_password, user_dns, ou_dns)
+        updated_user_dns = search_users(target_server_uri, target_bind_dn, target_bind_password, target_user_dn, object_classes)
+        target_group_dn = f"ou=Groups,{target_base_dn}"
 
-    # Distribute users among the created OUs
-    distribute_users_among_ous(target_server_uri, target_bind_dn, target_bind_password, user_dns, ou_dns)
-    updated_user_dns = search_users(target_server_uri, target_bind_dn, target_bind_password, target_user_dn,
-                                    object_classes)
-    target_group_dn = f"ou=Groups,{target_base_dn}"
+        dist_groups, sec_groups = generate_and_add_groups(target_server_uri, target_bind_dn, target_bind_password, target_group_dn, 5, 20)
+        add_members_to_groups(target_server_uri, target_bind_dn, target_bind_password, updated_user_dns, dist_groups, sec_groups)
 
-    dist_groups, sec_groups = generate_and_add_groups(target_server_uri, target_bind_dn, target_bind_password, target_group_dn,
-                                                      5, 20)
-    add_members_to_groups(target_server_uri, target_bind_dn, target_bind_password, updated_user_dns, dist_groups,
-                          sec_groups)
-
-    print("Users distributed among OUs successfully.")
+        print("Users distributed among OUs successfully.")

@@ -1,14 +1,57 @@
+#!/usr/bin/env python3
+
 import traceback
 from ldap3 import Server, Connection, ALL, SUBTREE
 import yaml
+import logging
+from colorlog import ColoredFormatter
+
+def setup_logger(name, log_file):
+    """Configures and returns a colored logger with the given name."""
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    ch = logging.StreamHandler()
+    fh = logging.FileHandler(log_file)
+
+    formatter = ColoredFormatter(
+        "%(log_color)s%(asctime)s.%(msecs)03d - %(levelname)-8s%(reset)s -  %(blue)s%(message)s",
+        datefmt='%Y-%m-%d %H:%M:%S',
+        reset=True,
+        log_colors={
+            'DEBUG': 'cyan',
+            'INFO': 'green',
+            'WARNING': 'yellow',
+            'ERROR': 'red',
+            'CRITICAL': 'red,bg_white',
+        },
+        secondary_log_colors={},
+        style='%'
+    )
+
+    file_formatter = logging.Formatter(
+        "%(asctime)s.%(msecs)03d - %(levelname)-8s - %(message)s",
+        datefmt='%Y-%m-%d %H:%M:%S',
+        style='%'
+    )
+
+    ch.setFormatter(formatter)
+    fh.setFormatter(file_formatter)
+    logger.addHandler(ch)
+    logger.addHandler(fh)
+
+    return logger
 
 # Load configuration from the YAML file
-with open('ou-sync.yaml', 'r') as file:
+with open('/etc/lsc/ou-sync.yaml', 'r') as file:
     config = yaml.safe_load(file)
 
 # Extract source and target configurations
 source_config = config['source']
 target_config = config['target']
+
+# Set up logging
+logger = setup_logger('ou_sync', '/var/log/ou_sync.log')
 
 def get_all_ous(config):
     """
@@ -32,10 +75,12 @@ def get_all_ous(config):
                     ou_id = entry.ouID.value if entry.ouID else None
                     ou_parent_id = entry.ouParentID.value if entry.ouParentID else None
                     ous.append((ou_name, dn, ou_id, ou_parent_id))
+                    logger.info(f"Retrieved OU: {ou_name} with DN: {dn}")
             else:
-                print("No entries found.")
+                logger.warning("No entries found.")
     except Exception as e:
-        print("LDAP error during OU retrieval:", str(e))
+        logger.error(f"LDAP error during OU retrieval: {str(e)}")
+        logger.debug(traceback.format_exc())
 
     return ous
 
@@ -58,10 +103,12 @@ def get_all_target_ous(config):
                 for entry in conn.entries:
                     dn = entry.entry_dn
                     ous.append(dn)
+                    logger.info(f"Retrieved target OU with DN: {dn}")
             else:
-                print("No entries found.")
+                logger.warning("No entries found.")
     except Exception as e:
-        print("LDAP error during target OU retrieval:", str(e))
+        logger.error(f"LDAP error during target OU retrieval: {str(e)}")
+        logger.debug(traceback.format_exc())
 
     return ous
 
@@ -80,11 +127,12 @@ def move_ou(config, old_dn, new_dn, ou_name):
     try:
         with Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn:
             if conn.modify_dn(old_dn, ou_name, new_superior=new_dn):
-                pass
+                logger.info(f"Moved OU {ou_name} from {old_dn} to {new_dn}")
             else:
-                pass
+                logger.warning(f"Failed to move OU {ou_name} from {old_dn} to {new_dn}")
     except Exception as e:
-        print("LDAP error during OU move:", str(e))
+        logger.error(f"LDAP error during OU move: {str(e)}")
+        logger.debug(traceback.format_exc())
 
 def convert_specific_parts_to_lowercase(dn):
     """
@@ -118,16 +166,19 @@ def ou_exist_under_base(config, base_dn, ou_id):
     server = Server(config['server_uri'], get_info=ALL)
     try:
         with Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn:
-            search_filter = f'(&(objectClass=organizationalUnit)(orgUnitID={ou_id}))'
+            search_filter = f'(&(objectClass=organizationalUnit)(ouID={ou_id}))'
             conn.search(search_base=base_dn, search_filter=search_filter, search_scope=SUBTREE)
             
             if len(conn.entries) > 0:
-
-                return True, conn.entries[0].entry_dn
+                dn = conn.entries[0].entry_dn
+                logger.info(f"OU with ID {ou_id} exists under base DN {base_dn}")
+                return True, dn
             else:
+                logger.info(f"OU with ID {ou_id} does not exist under base DN {base_dn}")
                 return False, None
     except Exception as e:
-        print("LDAP error during OU existence check:", str(e))
+        logger.error(f"LDAP error during OU existence check: {str(e)}")
+        logger.debug(traceback.format_exc())
         return False, None
 
 def create_ou_if_not_exists(config, ou_name, distinguished_name, ou_id, ou_parent_id):
@@ -145,7 +196,8 @@ def create_ou_if_not_exists(config, ou_name, distinguished_name, ou_id, ou_paren
     new_target_dn = convert_specific_parts_to_lowercase(new_target_dn)
     try:
         with (Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn):
-            if ou_name == "sudo" or ou_name == "automount" or ou_name == "Users": 
+            if ou_name == "sudo" or ou_name == "automount" or ou_name == "Users":
+                logger.info(f"Skipping creation for special OU: {ou_name}")
                 return
             
             ou_exists, existing_target_dn = ou_exist_under_base(config, base_dn, ou_id)
@@ -153,124 +205,24 @@ def create_ou_if_not_exists(config, ou_name, distinguished_name, ou_id, ou_paren
             if ou_exists:
                 existing_target_dn = convert_specific_parts_to_lowercase(existing_target_dn)
                 if new_target_dn == existing_target_dn:
-                    pass
+                    logger.info(f"OU {ou_name} already exists with DN {new_target_dn}")
                 else:
                     move_ou(config, existing_target_dn, new_target_dn, ou_name)
             else:
                 attributes = {
                     'objectClass': ['organizationalUnit'],
                     'ou': ou_name,
-                    'orgUnitID': str(ou_id),
-                    'orgUnitParentID': str(ou_parent_id)
+                    'ouID': str(ou_id),
+                    'ouParentID': str(ou_parent_id)
                 }
                 conn.add(new_target_dn, attributes=attributes)
                 if conn.result['result'] == 0:
-                    pass
+                    logger.info(f"Successfully added OU {ou_name} with DN {new_target_dn}")
                 else:
-                    print(f"Failed to add OU {new_target_dn} to {config['server_uri']}. Error: {conn.result}")
+                    logger.error(f"Failed to add OU {new_target_dn} to {config['server_uri']}. Error: {conn.result}")
     except Exception as e:
-        print("LDAP error during OU creation:", str(e))
-
-def move_user(config, user_dn, new_ou_dn):
-    """
-    Move a user from their current DN to a new OU.
-
-    :param config: Dictionary containing server URI, bind DN, bind password
-    :param user_dn: DN of the user to move
-    :param new_ou_dn: DN of the new OU
-    :return: None
-    """
-    server = Server(config['server_uri'])
-    conn = Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True)
-    try:
-        cn = user_dn.split(',')[0]
-        rdn = user_dn.split(',')[0]
-        new_user_dn = f"{cn},{new_ou_dn}"
-
-        conn.modify_dn(user_dn, rdn, new_superior=new_ou_dn)
-
-        if conn.result['result'] == 0:
-            print(f"Successfully moved user {user_dn} to {new_user_dn}")
-        else:
-            raise Exception(f"Failed to move user {user_dn} to {new_user_dn}: {conn.result['description']}")
-    except Exception as e:
-        print(f"Error: {e}")
-    finally:
-        conn.unbind()
-
-def check_if_user_moved(config, employee_id):
-    """
-    Check if a user with the given employee ID exists elsewhere in the directory.
-
-    :param config: Dictionary containing server URI, bind DN, bind password
-    :param employee_id: Employee ID of the user to check
-    :return: Tuple containing a boolean indicating existence and the DN if it exists
-    """
-    server = Server(config['server_uri'], get_info=ALL)
-    try:
-        with Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn:
-            if employee_id:
-                search_filter = f'(employeeID={employee_id})'
-                if conn.search(search_base=config['search_base'], search_filter=search_filter, search_scope=SUBTREE):
-                    if len(conn.entries) > 0:
-                        return True, conn.entries[0].entry_dn.replace(source_config['search_base'],
-                                                                      target_config['search_base'])
-            return False, None
-    except Exception as e:
-        traceback.print_exc()
-        print("LDAP error during user existence check:", str(e))
-        return False, None
-
-def check_if_ou_moved(config, ou_dn):
-    """
-    Check if an OU with the given DN exists elsewhere in the directory.
-
-    :param config: Dictionary containing server URI, bind DN, bind password
-    :param ou_dn: Distinguished name of the OU to check
-    :return: Tuple containing a boolean indicating existence and the DN if it exists
-    """
-    server = Server(config['server_uri'], get_info=ALL)
-    try:
-        with Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn:
-            search_filter = f'(distinguishedName={ou_dn})'
-            if conn.search(search_base=config['search_base'], search_filter=search_filter, search_scope=SUBTREE):
-                if len(conn.entries) > 0:
-                    return True, conn.entries[0].entry_dn.replace(source_config['search_base'],
-                                                                  target_config['search_base'])
-            return False, None
-    except Exception as e:
-        traceback.print_exc()
-        print("LDAP error during OU existence check:", str(e))
-        return False, None
-
-def check_and_move_child_elements(config, dn):
-    """
-    Check if child elements of the given DN exist elsewhere and move them if so.
-
-    :param config: Dictionary containing server URI, bind DN, bind password
-    :param dn: Distinguished name of the OU to check
-    """
-    server = Server(config['server_uri'], get_info=ALL)
-    try:
-        with Connection(server, config['bind_dn'], config['bind_password'], auto_bind=True) as conn:
-            search_filter = '(|(objectClass=organizationalUnit)(objectClass=domainAccount))'
-            attributes = ['distinguishedName', 'employeeID']
-            if conn.search(dn, search_filter, attributes=attributes, search_scope=SUBTREE):
-                for entry in conn.entries:
-                    entry_dn = entry.entry_dn
-                    if 'employeeID' in entry:
-                        employee_id = entry.employeeID.value
-                        user_moved, new_dn = check_if_user_moved(source_config, employee_id)
-                        if user_moved:
-                            move_user(config, entry_dn, new_dn)
-
-                    else:
-                        ou_moved, new_dn = check_if_ou_moved(source_config, entry_dn)
-                        if ou_moved:
-                            move_ou(config, entry_dn, new_dn, entry.ou.value)
-    except Exception as e:
-        traceback.print_exc()
-        print("LDAP error during child element check:", str(e))
+        logger.error(f"LDAP error during OU creation: {str(e)}")
+        logger.debug(traceback.format_exc())
 
 def synchronize_ous(source_config, target_config):
     """
@@ -286,7 +238,6 @@ def synchronize_ous(source_config, target_config):
         create_ou_if_not_exists(target_config, ou_name, dn, ou_id, ou_parent_id)
 
 if __name__ == "__main__":
-    print("Starting OU creation and modify.")
+    logger.info("Starting OU creation and modify.")
     synchronize_ous(source_config, target_config)
-    print("OUs created...")
-    print("OUs modified...")
+    logger.info("OUs created and modified.")
