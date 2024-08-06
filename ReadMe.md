@@ -18,7 +18,9 @@
         1. [AD Keytab](#ad-keytab)
         2. [Heimdal Keytab](#heimdal-keytab)
     2. [Python Skript](#python-skript)
-3. [Attribute in Active Directory](#attribute-in-active-directory)
+3. [Active Directory](#attribute-in-active-directory)
+    3.1 [Attribute in Active Directory](#attribute-in-active-directory)
+    3.2 [LDAPS Setup](#ldaps-setup)
 4. [Synchronisation](#synchronisation)
     1. [Ausführen der Synchronisationsskripte](#ausführen-der-synchronisationsskripte)
 5. [Kerberos mit OpenLDAP-Backend](#kerberos-mit-openldap-backend)
@@ -31,15 +33,17 @@
 
 ## Onboarding
 
-Damit Maschinen einheitlich und einfach installiert werden können, wurden Onboarding Skripts für verschiedene Instanzen erstellt. 
+Damit Maschinen einheitlich und einfach installiert werden können, wurden Onboarding-Skripts für verschiedene Instanzen erstellt. 
 Diese Skripte können nur auf Linux ausgeführt werden. 
 
-Ein Onboarding Skirpt kann ausgeführt werden durch folgende Befehle ausgeführt werden:
+Ein Onboarding-Skript kann durch folgende Befehle ausgeführt werden:
 
-Die DNS Einträge müssen zuerst erstellt werden. Dafür kann SRV benutzt werden. Dabei sind die Skripte dafür jedoch nicht speziell erstellt. 
+Die DNS-Einträge müssen zuerst erstellt werden. Dafür kann SRV benutzt werden. Dabei sind die Skripte dafür jedoch nicht speziell erstellt. 
+
+
 
 !!!
-**Während dieses Dokument geschrieben wurde, ist der LSC-Server unereichbar geworden.** 
+**Während dieses Dokument geschrieben wurde, ist der LSC-Server unerreichbar geworden..** 
 !!!
 
 Alternative Installation:
@@ -70,13 +74,15 @@ chmod +x script.sh
 #### OpenLDAP Installation
 
 
-Ein OpenLDAP Server kann durch das OpenLDAP Onboarding Skript aus `onboarding/cross-realm` installiert werden. 
+Ein OpenLDAP Server kann durch das OpenLDAP Onboarding Skript aus [`onboarding/ldap-ad-auth`](onboarding/ldap-ad-auth/openldap.sh) installiert werden. 
 
 #### Client Installation 
-Auf Linux kann das Onboarding Skript ausgeführt werden. Davor müssen die Einstellungen in diesem angepasst werden. 
+*Linux*
+Auf Linux kann das Onboarding-Skript ausgeführt werden. Davor müssen die Einstellungen in diesem angepasst werden. 
 
-Für macOS muss der Server unter Benutzer eingeschrieben werden. Dabei kann die IP-Adresse oder die DNS verwendet werden. Es muss die RFC Option gewählt werden und der Suchbereich muss dabei angegeben werden.  Die Mappings müssen entsprechend angepasst werden. Unter Users muss domainAccount als Objektklasse hinzugefügt werden. Dann unter Sicherheit wird der LDAP-Bind-Nutzer mit dem Passwort angegeben. Der Nutzer muss als DN angegeben werden. 
+Für macOS muss der Server unter Benutzer eingeschrieben werden. Dabei kann die IP-Adresse oder die DNS verwendet werden. Es muss die RFC-Option gewählt werden und der Suchbereich muss dabei angegeben werden.  Die Mappings müssen entsprechend angepasst werden. Unter Users muss domainAccount als Objektklasse hinzugefügt werden. Dann wird unter Sicherheit der LDAP-Bind-Nutzer mit dem Passwort angegeben. Der Nutzer muss als DN angegeben werden. 
 
+*macOS*
 Der SASL Mechansmus CRAM-MD5 muss deaktiviert werden durch. Dabei auf Mojave mit dem Skript:
 ```s
 for m in CRAM-MD5; do /usr/libexec/PlistBuddy -c "add ':module options:ldap:Denied SASL Methods:' string $m" /Library/Preferences/OpenDirectory/Configurations/LDAPv3/<LDAP_DNS/IP>.plist
@@ -87,24 +93,35 @@ und auf Sonoma mit dem Befehl:
 sudo odutil set configuration /LDAPv3/<LDAP_DNS/IP> module ldap option "Denied SASL Methods" CRAM-MD5 
 ```
 
+*Windows*
 Computer können standardmäßig an die AD-Domäne angeschlossen werden. Durch pGina können diese auch an OpenLDAP angeschlossen werden.
 
-Dabei Authentifikation und Gateway für lokale Maschinen und OpenLDAP aktiviert sein. Unter LDAP muss ein Bind-Nutzer angegeben werden mit DN und Passwort. 
-Unter Suchbereich werden die Suchbereiche festgelegt, dabei sollte die zweite Version aktiviert werden ` `, mit %uid und Sucherbereich, wo die Nutzer abgelegt sind. 
+Dabei sollten Authentifikation und Gateway für lokale Maschinen und OpenLDAP aktiviert sein. Unter LDAP muss ein Bind-Nutzer angegeben werden, mit DN und Passwort. 
+Unter Suchbereich werden die Suchbereiche festgelegt, dabei sollte die zweite Version aktiviert werden, mit %uid und Sucherbereich, wo die Nutzer abgelegt sind. 
+
+
 ### 4.1.3 Integrierter Ansatz: Heimdal, OpenLDAP und AD 
 
 #### OpenLDAP Installation
 
-Ein OpenLDAP Server kann durch das [OpenLDAP Onboarding Skript](onboarding/cross-realm/openldap.sh) aus `onboarding/cross-realm` installiert werden. 
+Ein OpenLDAP Server kann durch das Onboarding Skript aus [`onboarding/cross-realm`](onboarding/cross-realm/openldap_vorgeschlagent.sh) installiert werden. *Vorgeschlagen ist dabei die getrennte Konfiguration von Nutzern und Gruppen* 
+
 
 #### Kerberos Installation 
-Ein Kerberos Server kann durch das [Heimdal Onboarding Skript](onboarding/cross-realm/heimdal-kdc.sh) aus `onboarding/cross-realm` installiert werden. 
+Ein Kerberos Server kann durch das Onboarding Skript aus[`onboarding/cross-realm`](onboarding/cross-realm/heimdal-kdc.sh) aus installiert werden. 
+
+Das python Skript kann alle Python Funktionen automatisch erstellen. Es muss als Non-root-Nutzer durchgeführt werden. 
 
 #### Client Installation 
-Auf Linux kann das Onboarding Skript ausgeführt werden. Davor müssen die Einstellungen in diesem angepasst werden. 
+*Linux*
+Auf Linux kann das Onboarding-Skript ausgeführt werden. Davor müssen die Einstellungen in diesem angepasst werden. 
 
-Für macOS muss der Server unter Benutzer eingeschrieben werden. Dabei kann die IP-Adresse oder die DNS verwendet werden. Es muss die RFC Option gewählt werden und der Suchbereich muss dabei angegeben werden.  Die Mappings müssen entsprechend angepasst werden. Unter Users muss domainAccount als Objektklasse hinzugefügt werden. Dann unter Sicherheit wird der LDAP-Bind-Nutzer mit dem Passwort angegeben. Dieser muss nur als Benutzername angegeben werden und nicht als DN. 
+*macOS*
 
+Für macOS muss der Server unter Benutzer eingeschrieben werden. Dabei kann die IP-Adresse oder die DNS verwendet werden. Es muss die RFC-Option gewählt werden und der Suchbereich muss dabei angegeben werden.  Die Mappings müssen entsprechend angepasst werden. Unter Users muss domainAccount als Objektklasse hinzugefügt werden. Dann wird unter Sicherheit der LDAP-Bind-Nutzer mit dem Passwort angegeben. Dieser muss nur als Benutzername angegeben werden und nicht als DN. 
+
+
+*Windows*
 Windows Geräte können nur an die Active Directory Domäne angebunden werden. Ein Beispiel der Gruppenrichtlinien ist unter GPO.html zu sehen.
 Sonst wird der KDC durch folgende Befehle auf den Clients eingerichtet:
 ```s
@@ -114,8 +131,10 @@ ksetup /addhosttorealmmap $HEIMDAL_SERVER_DNS HEIMDAL.UNI-MAGDEBURG.DE
 ```
 Für die Befehle werden Administrator-Rechte benötigt
 #### Ausfallsicherheit
+
 Die Ausfallsicherheit wurde nur für den Kerberos Realm getestet, da die Replikation beziehungsweise Synchronisation andersweitig erläutert wird. 
-Auf dem Master-KDC müssen die `hprop` Service Principals in einer Keytab gespeichert werden. Auf einem weiteren Server wird das Onboarding Skript `onboarding/cross-realm/replica-heimdal.sh` ausgeführt. Dies muss den selben Realm, wie der Master haben. Daher müssen `heimdal-kdc.sh` und `replica-heimdal.sh` abgestimmt sein. 
+Auf dem Master-KDC müssen die `hprop` Service Principals in einer Keytab gespeichert werden. Auf einem weiteren Server wird das Onboarding-Skript `onboarding/cross-realm/replica-heimdal.sh` ausgeführt. Dies muss denselben Realm, wie der Master, haben. Daher müssen `heimdal-kdc.sh` und `replica-heimdal.sh` abgestimmt sein. 
+
 ```s
 sudo kadmin -l add hprop/$REPLICA_FQDN@$REALM
 sudo kadmin -l ext -k /etc/hprop.keytab kadmin/hprop@$REALM
@@ -127,7 +146,7 @@ Die Keytab `/etc/krb5.keytab`, die Datenbank, `/var/lib/heimdal-kdc/heimdal.db` 
 
 In `/etc/heimdal-kdc/kdc.conf` müssen Port 88 und 754 geöffnet sein. Dies wird unter `[kdc]` festgelegt mit
 ```s
-ports = 754, 88
+ports = 754, 88, 464 
 ```  
 
 `krb_prop` muss unter /etc/inetd.conf einkommentiert werden. 
@@ -156,7 +175,7 @@ kinit -C FILE:user.pem,user.key <UserInCert>
 
 - Konfiguration in Konfigurationsdateien tätigen
   - Es muss die keytabs geben.
-  - Der Nutzer des Service Tickets für Passwortänderungen braucht administrative Rechte hier, diese beschränken sich auf Passwortänderungen.
+  - Der Nutzer des Service Tickets für Passwortänderungen braucht administrative Rechte, diese beschränken sich auf Passwortänderungen.
   - für Active Directory wird nur dann ein Keytab benötigt, wenn dort auch Änderungen passieren sollen. 
 
 **HOWTO AD:**
@@ -178,12 +197,19 @@ Python Onboarding Skript ausführen
 /onboarding/cross-realm/python_script.sh
 
 in die Ordner kadmin und kerberosservice die nötigen Dateien
+
 kadmin:
     - setup.py
     - kadmin_interface_wrapper.c
 kerberosservice:
     - setup.py
     - kerberosservice.c
+py:
+    - main.py
+    - ldap_monitor.py
+    - kerberos_principal.py
+    - enum_change_type.py
+    - admin.keytab (so, wie in server-config.yaml festgelegt)
 installieren.
 
 source /<env>/bin/activate
@@ -198,8 +224,9 @@ Dahin navigieren, wo gespeichert die jeweiligen setup.py mit C-Bibliothek Dateie
     5. python3 main.py
 
 Zu beachten ist, dass der Nutzer die Notwendigen Rechte auf venv und andere Ordner hat. Das Skript python_script.sh soll hier ohne sudo ausgeführt werden.  
-
-## Attribute in Active Directory
+## Active Directory
+### Attribute in Active Directory
+Um die Schemata verändern zu können, muss ein Adminaccount `regsvr32 schmmgmt.dll` ausführen.
 
 Damit die Synchronisation vollständig funktionieren kann, müssen die Attribute in Active Directory erstellt werden. Diese muss den Objektklassen zugeordnet werden.
 - Nutzer (objectClass: user)
@@ -225,6 +252,28 @@ Damit die Synchronisation vollständig funktionieren kann, müssen die Attribute
         - Random OID
 Dann entweder den Active Directory Domain Service Dienst neustarten oder den Server neustarten. 
 
+#### LDAPS Setup
+Rolle: AD Certificate Authority
+- Certificate Authority 
+    
+    1. Certificate Authority    
+    2. Enterprise Option
+    3. Root option
+    4. Create new PK Option
+    5. SHA512-Hash
+    6. keeping CA name
+- Neustart
+
+Folgend auf Linux:
+
+```s
+openssl s_client -connect $AD_DOMAIN:636 -showcerts < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ad_cert.pem
+
+cp ad_cert.pem /usr/local/share/ca-certificates/ad_cert.crt
+
+update-ca-certificates
+```
+
 ## Synchronisation 
 Für die Synchronisation wird LSC-Projekt verwendet. https://lsc-project.org/ Alternativ: https://lsc.readthedocs.io/en/latest/index.html
 
@@ -249,7 +298,7 @@ verwendet werden. Davor sollte *sync_ou.py* ausgeführt werden, damit die Organi
 übernommen von: https://wiki.crans.org/WikiNit/Notes/LdapKerberos und https://github.com/heimdal/heimdal/blob/master/doc/setup.texi
 
 ### OpenLDAP
-OpenLDAP Konfiguration kann von Onboarding Skripten übernommen werden 
+OpenLDAP Konfiguration kann von Onboarding Skripten übernommen werden.
 
 Damit Principals hinzugefügt werden können, muss das kerberos schema aus ldap/full_schema installiert werden. 
 
@@ -302,7 +351,7 @@ Die Kerberos Principals sollten jetzt in OpenLDAP sichtbar sein.
 
 ### Probleme bei der Implementation
 
-1. Die Principals scheinen in Kerberos erstellt werden zu müssen. Es war mit der Konfiguration nicht möglich Principals nachträglich für Nutzer zu erstellen.
+1. Die Principals scheinen in Kerberos erstellt werden zu müssen. Es war mit der Konfiguration nicht möglich, Principals nachträglich für Nutzer zu erstellen.
 2. Es konnte nur die Objektklasse `account` verwendet werden, da andere Attribute, wie sn oder cn nicht automatisch erstellt werden. 
 
 ### Versuch Installation LDAP mit Heimdal durch Source
