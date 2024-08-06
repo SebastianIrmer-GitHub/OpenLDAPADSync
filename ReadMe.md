@@ -201,6 +201,8 @@ sudo chown <currentuser>: admin.keytab
 Python Onboarding Skript ausführen
 /onboarding/cross-realm/python_script.sh
 
+**Zu beachten ist, dass der Nutzer die Notwendigen Rechte auf venv und andere Ordner haben muss. Das Skript python_script.sh soll hier ohne sudo ausgeführt werden.**
+
 Normalerweise sollte das ausreichen. Sonst die nötigen Dateien hinzufügen:
 ```
 kadmin:
@@ -220,7 +222,7 @@ installieren.
 source /<env>/bin/activate
 ```
 
-Dahin navigieren, wo gespeichert die jeweiligen setup.py mit C-Bibliothek Dateien gespeichert sind:
+Dahin navigieren, wo jeweiligen setup.py-Datein gespeichert sind:
 
     1. pip setup.py build
     2. pip install .
@@ -228,7 +230,7 @@ Dahin navigieren, wo gespeichert die jeweiligen setup.py mit C-Bibliothek Dateie
     4. Einrichten der Konfigurationsdateien (ad-server.yaml, server-config.yaml)
     5. python3 main.py
 
-Zu beachten ist, dass der Nutzer die Notwendigen Rechte auf venv und andere Ordner hat. Das Skript python_script.sh soll hier ohne sudo ausgeführt werden.  
+
 ## Active Directory
 ### Attribute in Active Directory
 Um die Schemata verändern zu können, muss ein Adminaccount `regsvr32 schmmgmt.dll` ausführen.
