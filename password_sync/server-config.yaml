@@ -1,0 +1,18 @@
+ldap:
+  server: "ldap://openldap.heimdal.uni-magdeburg.de"
+  user: "cn=admin,dc=openldap,dc=heimdal,dc=uni-magdeburg,dc=de"
+  password: "Abc1234"
+  search_base: "dc=openldap,dc=heimdal,dc=uni-magdeburg,dc=de"
+  search_filter: "(objectClass=domainAccount)"
+  attributes: ["userAccountControl", "shadowExpire", "uid", "cn", "employeeID"]
+  domain: "HEIMDAL.UNI-MAGDEBURG.DE"
+  keytab: "admin.keytab"
+ad:
+  server: "ldap://kerberos.uni-magdeburg.de"
+  user: "cn=Administrator,cn=Users,dc=kerberos,dc=uni-magdeburg,dc=de"
+  password: "Abc1234"
+  search_base: "dc=kerberos,dc=uni-magdeburg,dc=de"
+  search_filter: "(objectClass=user)"
+  attributes: ["userAccountControl", "accountExpires", "uid", "cn", "employeeID"]
+  domain: "KERBEROS.UNI-MAGDEBURG.DE"
+  keytab: "svc_passchange.keytab"
