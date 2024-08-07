@@ -688,7 +688,7 @@ class LDAPMonitor:
                 break 
             else:
                 self.logger.info("User not found in AD, retrying in 2 miuntes... (Attempt %d/%d)", attempt + 1, retries)
-                time.sleep(20)
+                time.sleep(120)
                 _, ad_sam_account_name = self.search_user_in_ad_by_employee_id(principal.employee_id)
 
     def monitor_changes(self):

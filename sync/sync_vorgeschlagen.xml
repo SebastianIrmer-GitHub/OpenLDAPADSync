@@ -120,6 +120,7 @@
                     <string>mail</string>
                     <string>sn</string>
                     <string>uid</string>
+                    <string>$LDAP_USER_PIVOT</string>
                     <string>gender</string>
                     <string>employeeID</string>
                     <string>uidNumber</string>
@@ -151,7 +152,7 @@
                     <string>userAccountControl</string>
                     <string>sn</string>
                     <string>gender</string>
-                    <string>employeeID</string>
+                    <string>$AD_USER_PIVOT</string>
                     <string>pwdLastSet</string>
                     <string>uidNumber</string>
                     <string>gidNumber</string>
@@ -631,3 +632,4 @@
     <security>
     </security>
 </lsc>
+

@@ -297,7 +297,7 @@
                     <string>accountExpires</string>
                     <string>pwdLastSet</string> 
                 </fetchedAttributes>
-                 <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$)(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
+                 <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$))(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=user)($AD_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>
@@ -419,7 +419,7 @@
                 <fetchedAttributes>
                     <string>$AD_USER_PIVOT</string>
                 </fetchedAttributes>
-                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$)(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
+                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$))(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=user)($AD_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>
@@ -466,7 +466,7 @@
                 <fetchedAttributes>
                     <string>$AD_USER_PIVOT</string>
                 </fetchedAttributes>
-                 <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$)(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
+                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$))(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=user)($AD_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>
@@ -513,7 +513,7 @@
                 <fetchedAttributes>
                     <string>$AD_USER_PIVOT</string>
                 </fetchedAttributes>
-                 <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$)(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
+                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$))(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=user)($AD_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>
@@ -560,7 +560,7 @@
                 <fetchedAttributes>
                     <string>$AD_USER_PIVOT</string>
                 </fetchedAttributes>
-                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$)(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
+                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$))(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=user)($AD_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>

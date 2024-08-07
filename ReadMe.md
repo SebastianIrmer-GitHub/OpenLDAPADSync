@@ -41,9 +41,8 @@ Ein Onboarding-Skript kann durch folgende Befehle ausgeführt werden:
 Die DNS-Einträge müssen zuerst erstellt werden. Dafür kann SRV benutzt werden. Dabei sind die Skripte dafür jedoch nicht speziell erstellt. 
 
 
-
 !!!
-**Während dieses Dokument geschrieben wurde, ist der LSC-Server unerreichbar geworden..** 
+**Während dieses Dokument geschrieben wurde, ist der LSC-Server unerreichbar geworden.** 
 !!!
 
 Alternative Installation:

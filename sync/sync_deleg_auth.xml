@@ -47,7 +47,7 @@
                 </fetchedAttributes>
                 <getAllFilter><![CDATA[(objectClass=organizationalUnit)]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=organizationalUnit)(ouID={ouID}))]]></getOneFilter>
-                <cleanFilter><![CDATA[(&(objectClass=organizationalUnit)(ouID={orgUnitID}))]]></cleanFilter>
+                <cleanFilter><![CDATA[(&(objectClass=organizationalUnit)(ouID={ouID}))]]></cleanFilter>
                 <synchronizingAllWhenStarting>true</synchronizingAllWhenStarting>
                 <serverType>OpenLDAP</serverType>           
             </asyncLdapSourceService>
@@ -56,17 +56,17 @@
                 <connection reference="ldap-AD-conn" />
                 <baseDn>ou=Domain Users,$AD_BASE_DN</baseDn>
                 <pivotAttributes>
-                    <string>orgUnitID</string>
+                    <string>ouID</string>
                 </pivotAttributes>
                 <fetchedAttributes>
                     <string>ou</string>
-                    <string>orgUnitID</string>
-                    <string>orgUnitParentID</string>
+                    <string>ouID</string>
+                    <string>ouParentID</string>
                     <string>objectclass</string>
                     <string>description</string>
                 </fetchedAttributes>
                 <getAllFilter><![CDATA[(objectClass=organizationalUnit)]]></getAllFilter>
-                <getOneFilter><![CDATA[(&(objectClass=organizationalUnit)(orgUnitID={ouID}))]]></getOneFilter>
+                <getOneFilter><![CDATA[(&(objectClass=organizationalUnit)(ouID={ouID}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>
                 <mainIdentifier>js:removeBaseDN(srcBean.getMainIdentifier(), "$BASE_DN", "$AD_BASE_DN")</mainIdentifier>
@@ -86,14 +86,14 @@
                     </createValues>
                 </dataset>
                 <dataset>
-                    <name>orgUnitID</name>
+                    <name>ouID</name>
                     <policy>KEEP</policy>
                     <createValues>
                         <string>srcBean.getDatasetFirstValueById("ouID")</string>
                     </createValues>
                 </dataset>  
                  <dataset>
-                    <name>orgUnitParentID</name>
+                    <name>ouParentID</name>
                     <policy>KEEP</policy>
                     <createValues>
                         <string>srcBean.getDatasetFirstValueById("ouParentID")</string>
@@ -112,7 +112,7 @@
                 <connection reference="ldap-OpenLDAP-conn" />
                 <baseDn>ou=Domain Users,$BASE_DN</baseDn>
                 <pivotAttributes>
-                    <string>$LDAP_UacSER_PIVOT</string>
+                    <string>$LDAP_USER_PIVOT</string>
                 </pivotAttributes>
                 <fetchedAttributes>
                     <string>cn</string>
@@ -126,6 +126,7 @@
                     <string>uidNumber</string>
                     <string>gidNumber</string>
                     <string>userStatus</string>
+                    <string>$LDAP_USER_PIVOT</string>
                     <string>userStatusValidFrom</string>
                     <string>shadowExpire</string>
                 </fetchedAttributes>
@@ -155,6 +156,7 @@
                     <string>pwdLastSet</string>
                     <string>uidNumber</string>
                     <string>gidNumber</string>
+                    <string>$AD_USER_PIVOT</string>
                     <string>userStatus</string>
                     <string>userStatusValidFrom</string>
                     <string>accountExpires</string>
