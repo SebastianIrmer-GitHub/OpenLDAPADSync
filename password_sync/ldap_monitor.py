@@ -625,6 +625,7 @@ class LDAPMonitor:
             try:
                 if entry.shadowExpire.value:
                     princ_expiration_time = self.ldap_time_to_kerberos_time(entry.shadowExpire.value)
+                    print(princ_expiration_time)
             except Exception as e:
                 self.logger.error("Principal expiration time couldn't be determined: %s", e)
         return princ_expiration_time

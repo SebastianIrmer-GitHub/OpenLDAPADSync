@@ -35,15 +35,13 @@ url_to_base_dn() {
 
 # Get base DNs
 BASE_DN=$(url_to_base_dn "$LDAP_DOMAIN" "false")
-AD_BASE_DN=$(url_to_base_dn "$AD_REALM" "true")
-
 
 # SSSD configuration
 sudo bash -c "cat > /etc/sssd/sssd.conf" <<EOF
 [sssd]
 config_file_version = 2
 domains = $LDAP_DOMAIN
-services = nss, pam, autofs, sudo
+services = nss, pam, sudo
 
 [domain/$LDAP_DOMAIN]
 id_provider = ldap

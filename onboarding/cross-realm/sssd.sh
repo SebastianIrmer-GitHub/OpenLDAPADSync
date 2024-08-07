@@ -154,3 +154,4 @@ sudo chown root:root /etc/sssd/sssd.conf
 
 pam-auth-update --enable mkhomedir
 sudo systemctl restart sssd
+echo "Reboot necessary to login."

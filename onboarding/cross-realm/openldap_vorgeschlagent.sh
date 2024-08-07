@@ -259,6 +259,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                     <string>mail</string>
                     <string>sn</string>
                     <string>uid</string>
+                    <string>$LDAP_USER_PIVOT</string>
                     <string>gender</string>
                     <string>employeeID</string>
                     <string>uidNumber</string>
@@ -290,7 +291,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                     <string>userAccountControl</string>
                     <string>sn</string>
                     <string>gender</string>
-                    <string>employeeID</string>
+                    <string>$AD_USER_PIVOT</string>
                     <string>pwdLastSet</string>
                     <string>uidNumber</string>
                     <string>gidNumber</string>
@@ -811,18 +812,6 @@ function convertOpenLDAPToAD(openldapTimestamp) {
 }
 
 
-function getAccountExpires(ldapTimestamp) {
-    // Constants for conversion
-
-
-    // Check if ldapTimestamp is empty or null
-    if (!ldapTimestamp) {
-        return "9223372036854775807";
-    }
-
-    return ldapTimestamp
-
-}
 EOF
 echo "Verifying OpenLDAP installation..."
 
@@ -1307,6 +1296,16 @@ openssl s_client -connect $AD_DOMAIN:636 -showcerts < /dev/null | sed -ne '/-BEG
 cp ad_cert.pem /usr/local/share/ca-certificates/ad_cert.crt
 
 update-ca-certificates
+
+expect << EOF
+spawn /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/keytool -importcert -file ad_cert.pem -keystore /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/cacerts -alias ad_cert_alias
+expect "Enter keystore password:"
+send "changeit\r"
+expect "Trust this certificate? \[no\]:"
+send "yes\r"
+expect eof
+EOF
+
 
 echo "Restart needed for changes to take full effect" 
 

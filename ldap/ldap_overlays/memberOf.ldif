@@ -20,5 +20,5 @@ olcMemberOfMemberOfAD: memberOf
 dn: olcOverlay={4}memberof,olcDatabase={1}mdb,cn=config
 changetype: modify
 replace: olcMemberOfGroupOC
-olcMemberOfGroupOC: customGroup (strukturell)
+olcMemberOfGroupOC: customGroup
 

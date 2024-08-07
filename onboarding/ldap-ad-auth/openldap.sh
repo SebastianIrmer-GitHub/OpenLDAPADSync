@@ -5,12 +5,14 @@
 # LDAP Domain needs to be a DNS Entry in the DNS Configuration
 # AD_DOMAIN similarly needs to be set up. Attributes need to be created in AD 
 
+
+
 LDAP_DOMAIN="openldap.uni-magdeburg.de"
 LDAP_ORG="Example Organization"
 LDAP_ADMIN_PASS="Abc1234"
 
 AD_DOMAIN="kerberos.uni-magdeburg.de"
-AD_FQDN_DOMAIN="ads100.kerberos.uni-magdeburg.de"
+AD_FQDN_DOMAIN="ad100.kerberos.uni-magdeburg.de"
 AD_PASSWORD="Abc1234"
 
 LDAP_USER_PIVOT="employeeID"
@@ -60,7 +62,7 @@ sudo apt-get update
 
 # Install OpenLDAP server and client non-interactively
 echo "Installing OpenLDAP server and client..."
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y autofs autofs-ldap python3-venv python3-pip python3-ldap3 openjdk-8-jdk slapd ldap-utils sasl2-bin libsasl2-2 libsasl2-modules libsasl2-modules-gssapi-mit expect heimdal-clients
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y autofs autofs-ldap python3-venv python3-colorlog python3-pip python3-ldap3 openjdk-8-jdk slapd ldap-utils sasl2-bin libsasl2-2 libsasl2-modules libsasl2-modules-gssapi-mit expect heimdal-clients
 
 
 echo "Configuring slapd..."
@@ -160,7 +162,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                 </fetchedAttributes>
                 <getAllFilter><![CDATA[(objectClass=organizationalUnit)]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=organizationalUnit)(ouID={ouID}))]]></getOneFilter>
-                <cleanFilter><![CDATA[(&(objectClass=organizationalUnit)(ouID={orgUnitID}))]]></cleanFilter>
+                <cleanFilter><![CDATA[(&(objectClass=organizationalUnit)(ouID={ouID}))]]></cleanFilter>
                 <synchronizingAllWhenStarting>true</synchronizingAllWhenStarting>
                 <serverType>OpenLDAP</serverType>           
             </asyncLdapSourceService>
@@ -169,17 +171,17 @@ cat <<EOF > /etc/lsc/lsc.xml
                 <connection reference="ldap-AD-conn" />
                 <baseDn>ou=Domain Users,$AD_BASE_DN</baseDn>
                 <pivotAttributes>
-                    <string>orgUnitID</string>
+                    <string>ouID</string>
                 </pivotAttributes>
                 <fetchedAttributes>
                     <string>ou</string>
-                    <string>orgUnitID</string>
-                    <string>orgUnitParentID</string>
+                    <string>ouID</string>
+                    <string>ouParentID</string>
                     <string>objectclass</string>
                     <string>description</string>
                 </fetchedAttributes>
                 <getAllFilter><![CDATA[(objectClass=organizationalUnit)]]></getAllFilter>
-                <getOneFilter><![CDATA[(&(objectClass=organizationalUnit)(orgUnitID={ouID}))]]></getOneFilter>
+                <getOneFilter><![CDATA[(&(objectClass=organizationalUnit)(ouID={ouID}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>
                 <mainIdentifier>js:removeBaseDN(srcBean.getMainIdentifier(), "$BASE_DN", "$AD_BASE_DN")</mainIdentifier>
@@ -199,14 +201,14 @@ cat <<EOF > /etc/lsc/lsc.xml
                     </createValues>
                 </dataset>
                 <dataset>
-                    <name>orgUnitID</name>
+                    <name>ouID</name>
                     <policy>KEEP</policy>
                     <createValues>
                         <string>srcBean.getDatasetFirstValueById("ouID")</string>
                     </createValues>
                 </dataset>  
                  <dataset>
-                    <name>orgUnitParentID</name>
+                    <name>ouParentID</name>
                     <policy>KEEP</policy>
                     <createValues>
                         <string>srcBean.getDatasetFirstValueById("ouParentID")</string>
@@ -225,7 +227,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                 <connection reference="ldap-OpenLDAP-conn" />
                 <baseDn>ou=Domain Users,$BASE_DN</baseDn>
                 <pivotAttributes>
-                    <string>$LDAP_UacSER_PIVOT</string>
+                    <string>$LDAP_USER_PIVOT</string>
                 </pivotAttributes>
                 <fetchedAttributes>
                     <string>cn</string>
@@ -239,6 +241,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                     <string>uidNumber</string>
                     <string>gidNumber</string>
                     <string>userStatus</string>
+                    <string>$LDAP_USER_PIVOT</string>
                     <string>userStatusValidFrom</string>
                     <string>shadowExpire</string>
                 </fetchedAttributes>
@@ -268,6 +271,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                     <string>pwdLastSet</string>
                     <string>uidNumber</string>
                     <string>gidNumber</string>
+                    <string>$AD_USER_PIVOT</string>
                     <string>userStatus</string>
                     <string>userStatusValidFrom</string>
                     <string>accountExpires</string>
@@ -846,7 +850,7 @@ olcAttributeTypes: ( domainUserAttrs:4 NAME 'userStatusValidFrom' DESC 'Status s
 olcAttributeTypes: ( domainUserAttrs:5 NAME 'employeeID' DESC 'Unique EmployeeID for the user' EQUALITY caseIgnoreMatch SUBSTR caseIgnoreSubstringsMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
 olcAttributeTypes: ( 1.3.6.1.4.1.4203.666.1.90 NAME 'accountExpires' DESC 'Account expiration time in 100-nanosecond intervals since January 1, 1601 (UTC)' EQUALITY integerMatch ORDERING integerOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.27 )
 olcAttributeTypes: ( domainUserAttrs:7 NAME 'pwdLastSet' DESC 'Password last changed in generalized time format' EQUALITY generalizedTimeMatch ORDERING generalizedTimeOrderingMatch SYNTAX 1.3.6.1.4.1.1466.115.121.1.24 SINGLE-VALUE )
-olcObjectClasses: ( domainUserOCs:1 NAME 'domainAccount' DESC 'User Identity in the organization' SUP top STRUCTURAL MUST ( cn $ mail $ uid $ employeeID $ ) MAY (  gender $ userAccountControl $ userStatus $ userStatusValidFrom $ sn $ sshPublicKey $ audio $ host $ pwdLastSet $ businessCategory $ carLicense $ departmentNumber $ description $ destinationIndicator $ displayName $ accountExpires $ employeeID $ employeeType $ facsimileTelephoneNumber $ gecos $ gidNumber $ givenName $ homeDirectory $ homePhone $ homePostalAddress $ initials $ internationaliSDNNumber $ jpegPhoto $ l $ labeledURI $ loginShell $ mail $ manager $ mobile $ o $ ou $ pager $ photo $ physicalDeliveryOfficeName $ postalAddress $ postalCode $ postOfficeBox $ preferredDeliveryMethod $ preferredLanguage $ registeredAddress $ roomNumber $ secretary $ seeAlso $ shadowExpire $ shadowInactive $ shadowLastChange $ shadowMax $ shadowMin $ shadowWarning $ st $ street $ telephoneNumber $ teletexTerminalIdentifier $ telexNumber $ title $ uidNumber $ userCertificate $ userPassword $ userPKCS12 $ userSMIMECertificate $ x121Address $ x500uniqueIdentifier ) )
+olcObjectClasses: ( domainUserOCs:1 NAME 'domainAccount' DESC 'User Identity in the organization' SUP top STRUCTURAL MUST ( cn $ mail $ uid $ employeeID ) MAY (  gender $ userAccountControl $ userStatus $ userStatusValidFrom $ sn $ sshPublicKey $ audio $ host $ pwdLastSet $ businessCategory $ carLicense $ departmentNumber $ description $ destinationIndicator $ displayName $ shadowExpire $ employeeID $ employeeType $ facsimileTelephoneNumber $ gecos $ gidNumber $ givenName $ homeDirectory $ homePhone $ homePostalAddress $ initials $ internationaliSDNNumber $ jpegPhoto $ l $ labeledURI $ loginShell $ mail $ manager $ mobile $ o $ ou $ pager $ photo $ physicalDeliveryOfficeName $ postalAddress $ postalCode $ postOfficeBox $ preferredDeliveryMethod $ preferredLanguage $ registeredAddress $ roomNumber $ secretary $ seeAlso $ shadowExpire $ shadowInactive $ shadowLastChange $ shadowMax $ shadowMin $ shadowWarning $ st $ street $ telephoneNumber $ teletexTerminalIdentifier $ telexNumber $ title $ uidNumber $ userCertificate $ userPassword $ userPKCS12 $ userSMIMECertificate $ x121Address $ x500uniqueIdentifier ) )
 
 dn: cn=automountSchema,cn=schema,cn=config
 objectClass: olcSchemaConfig
@@ -1036,38 +1040,6 @@ ou: Users
 ouID: 5
 ouParentID: 0
 
-dn: ou=Klinik,$BASE_DN
-objectClass: organizationalUnit
-objectClass: top
-objectClass: customOU
-ou: Users
-ouID: 14
-ouParentID: 0
-
-dn: ou=Institut,$BASE_DN
-objectClass: organizationalUnit
-objectClass: top
-objectClass: customOU
-ou: Users
-ouID: 13
-ouParentID: 0
-
-dn: ou=ZE,$BASE_DN
-objectClass: organizationalUnit
-objectClass: top
-objectClass: customOU
-ou: Users
-ouID: 12
-ouParentID: 0
-
-dn: ou=EXT,$BASE_DN
-objectClass: organizationalUnit
-objectClass: top
-objectClass: customOU
-ou: Users
-ouID: 11
-ouParentID: 0
-
 dn: ou=Groups,$BASE_DN
 objectClass: organizationalUnit
 objectClass: top
@@ -1095,32 +1067,17 @@ uid: testuser123
 userAccountControl: 512
 userStatus: active
 userStatusValidFrom: 20240721100000Z
-seeAlso: cn=Test User,ou=Domain Users,dc=kerberos,dc=uni-magdeburg,dc=de
+seeAlso: cn=testuser123,ou=Domain Users,$AD_BASE_DN
 uidNumber: 1001
 gidNumber: 1002
 mail: user@mail
 
-dn: cn=testuser1234,ou=Domain Users,$BASE_DN
-objectClass: domainAccount
-objectClass: top
-cn: testuser123
-employeeID: 123
-gender: M
-sn: User
-uid: testuser1234
-userAccountControl: 512
-userStatus: active
-userStatusValidFrom: 20240721100000Z
-userPassword: {SASL}testuser123@$AD_DOMAIN
-uidNumber: 1002
-gidNumber: 1002
-mail: user1@mail
 
 dn: cn=testuser1234,ou=Domain Users,$BASE_DN
 objectClass: domainAccount
 objectClass: top
-cn: testuser123
-employeeID: 123
+cn: testuser1234
+employeeID: 12345456
 gender: M
 sn: User
 uid: testuser1234
@@ -1171,6 +1128,7 @@ userStatus: active
 userStatusValidFrom: 20240721100000Z
 userPassword: {MD5}9NvKgI4QLDBcuS8ZLRbvTQ==
 # userPassword: Abc1234
+mail: bind@mail
 
 dn: ou=automount,$BASE_DN
 objectClass: customOU
@@ -1294,10 +1252,9 @@ systemctl enable saslauthd
 systemctl restart saslauthd
 systemctl restart slapd
 
-echo "Testing saslauthd for user testuser123:"
-sudo testsaslauthd -u testuser123 -p Abc1234 
 
-cat <<EOF > ou-sync.yaml
+
+cat <<EOF > /etc/lsc/ou-sync.yaml
 source:
   server_uri: 'ldap://$LDAP_DOMAIN:389'
   bind_dn: 'cn=admin,$BASE_DN'
@@ -1318,11 +1275,21 @@ EOF
 
 # Credentials werden nicht automatisch erstellt. 
 
-openssl s_client -connect $AD_DOMAIN:636 -showcerts < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ad_cert.pem
+openssl s_client -connect $AD_FQDN_DOMAIN:636 -showcerts < /dev/null | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > ad_cert.pem
 
 cp ad_cert.pem /usr/local/share/ca-certificates/ad_cert.crt
 
 update-ca-certificates
+
+
+expect << EOF
+spawn /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/keytool -importcert -file ad_cert.pem -keystore /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/cacerts -alias ad_cert_alias
+expect "Enter keystore password:"
+send "changeit\r"
+expect "Trust this certificate? \[no\]:"
+send "yes\r"
+expect eof
+EOF
 
 sudo hostnamectl set-hostname $LDAP_DOMAIN
 
@@ -1626,3 +1593,5 @@ echo "1. lsc -c all runs every hour and logs to /var/log/lsc-cron.log"
 
 # PYTHON_CRON_JOB="* * * * * /usr/bin/env python3 /etc/lsc/python-sync.py >> /var/log/python-sync-cron.log 2>&1"
 # (crontab -l 2>/dev/null | grep -F "$PYTHON_CRON_JOB" >/dev/null) || (crontab -l 2>/dev/null; echo "$PYTHON_CRON_JOB") | crontab -
+
+echo "Reboot for changes to take effect." 

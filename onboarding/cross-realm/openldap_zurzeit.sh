@@ -555,7 +555,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                 <fetchedAttributes>
                     <string>$AD_USER_PIVOT</string>
                 </fetchedAttributes>
-                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$)(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
+                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$))(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=user)($AD_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>
@@ -602,7 +602,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                 <fetchedAttributes>
                     <string>$AD_USER_PIVOT</string>
                 </fetchedAttributes>
-                 <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$)(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
+                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$))(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=user)($AD_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>
@@ -649,7 +649,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                 <fetchedAttributes>
                     <string>$AD_USER_PIVOT</string>
                 </fetchedAttributes>
-                 <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$)(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
+                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$))(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=user)($AD_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>
@@ -696,7 +696,7 @@ cat <<EOF > /etc/lsc/lsc.xml
                 <fetchedAttributes>
                     <string>$AD_USER_PIVOT</string>
                 </fetchedAttributes>
-                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$)(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
+                <getAllFilter><![CDATA[(&(objectClass=user)(!(cn=$REALM\$))(!(objectClass=computer))(!(memberOf=CN=Denied RODC Password Replication Group,CN=Users,DC=kerberos,DC=uni-magdeburg,DC=de))(!(memberOf=CN=Administrators,CN=Builtin,DC=kerberos,DC=uni-magdeburg,DC=de)))]]></getAllFilter>
                 <getOneFilter><![CDATA[(&(objectClass=user)($AD_USER_PIVOT={$LDAP_USER_PIVOT}))]]></getOneFilter>
             </ldapDestinationService>
             <propertiesBasedSyncOptions>
@@ -1182,7 +1182,6 @@ function convertOpenLDAPToAD(openldapTimestamp) {
     // Return the original timestamp if it doesn't end with 'Z'
     return openldapTimestamp;
 }
-
 EOF
 echo "Verifying OpenLDAP installation..."
 
@@ -1533,13 +1532,13 @@ ou: auto_master
 dn: cn=123,ou=auto_home,ou=automount,$BASE_DN
 objectClass: automount
 objectClass: top
-automountInformation: -fstype=smbfs ://$AD_DOMAIN/Shared
+automountInformation: -fstype=smbfs ://$AD_FQDN_DOMAIN/Shared
 cn: 123
 
 dn: cn=321,ou=auto_home,ou=automount,$BASE_DN
 objectClass: automount
 objectClass: top
-automountInformation: -fstype=smbfs ://$AD_DOMAIN/NotShared
+automountInformation: -fstype=smbfs ://$AD_FQDN_DOMAIN/NotShared
 cn: 321
 
 dn: ou=auto.test,ou=auto.master,ou=automount,$BASE_DN
@@ -1562,19 +1561,19 @@ cn: /shares
 dn: cn=home,cn=/test,ou=auto.test,ou=auto.master,ou=automount,$BASE_DN
 objectClass: automount
 objectClass: top
-automountInformation: -fstype=cifs,rw,noperm,cruid=$UID,sec=krb5i       ://$AD_DOMAIN/HomeFolders
+automountInformation: -fstype=cifs,rw,noperm,cruid=\$UID,sec=krb5i       ://$AD_FQDN_DOMAIN/HomeFolders
 cn: home
 
 dn: cn=pub,cn=/shares,ou=auto.test,ou=auto.master,ou=automount,$BASE_DN
 objectClass: automount
 objectClass: top
-automountInformation: -fstype=cifs,rw,noperm,cruid=$UID,sec=krb5i       ://$AD_DOMAIN/Shared
+automountInformation: -fstype=cifs,rw,noperm,cruid=\$UID,sec=krb5i       ://$AD_FQDN_DOMAIN/Shared
 cn: pub
 
 dn: cn=notshared,cn=/shares,ou=auto.test,ou=auto.master,ou=automount,$BASE_DN
 objectClass: automount
 objectClass: top
-automountInformation: -fstype=cifs,rw,noperm,cruid=$UID,sec=krb5i       ://$AD_DOMAIN/NotShared
+automountInformation: -fstype=cifs,rw,noperm,cruid=\$UID,sec=krb5i       ://$AD_FQDN_DOMAIN/NotShared
 cn: notshared
 
 dn: cn=/test,ou=auto_master,ou=automount,$BASE_DN
@@ -1667,6 +1666,15 @@ openssl s_client -connect $AD_DOMAIN:636 -showcerts < /dev/null | sed -ne '/-BEG
 cp ad_cert.pem /usr/local/share/ca-certificates/ad_cert.crt
 
 update-ca-certificates
+
+expect << EOF
+spawn /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/keytool -importcert -file ad_cert.pem -keystore /usr/lib/jvm/java-8-openjdk-amd64/jre/lib/security/cacerts -alias ad_cert_alias
+expect "Enter keystore password:"
+send "changeit\r"
+expect "Trust this certificate? \[no\]:"
+send "yes\r"
+expect eof
+EOF
 
 echo "Restart needed for changes to take full effect" 
 
