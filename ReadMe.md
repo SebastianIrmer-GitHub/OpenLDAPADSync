@@ -73,7 +73,7 @@ chmod +x script.sh
 
 #### OpenLDAP Installation
 
-
+**Für die Synchronisation muss LDAPS auf dem AD DC installiert sein.** 
 Ein OpenLDAP Server kann durch das OpenLDAP Onboarding Skript aus [`onboarding/ldap-ad-auth`](onboarding/ldap-ad-auth/openldap.sh) installiert werden. 
 
 #### Client Installation 
@@ -119,6 +119,7 @@ Das python Skript kann alle Python Funktionen automatisch erstellen. Es muss als
 *Linux*
 
 Auf Linux kann das Onboarding-Skript ausgeführt werden. Davor müssen die Einstellungen in diesem angepasst werden. 
+Wenn ein Nutzer durch `id <user>` gefunden werden kann, aber sich nicht eingeloggt werden kann, dann in `/etc/sssd/sssd.conf` den krb5_validate-Wert auf `False` setzten, sssd neu starten und dann wieder auf `True` setzen. 
 
 *macOS*
 
@@ -147,7 +148,7 @@ sudo kadmin -l ext -k /etc/hprop.keytab hprop/$REPLICA_FQDN@$REALM
 sudo hprop -k keytab $REPLICA_FQDN
 ```
 
-Die Keytab `/etc/krb5.keytab`, die Datenbank, `/var/lib/heimdal-kdc/heimdal.db` und der Master-Schlüssel `/var/lib/heimdal-kdc/m-key` müssen in den gleichen Pfaden auf dem Slave installiert sein. 
+Die Keytab `/etc/hprop.keytab`, die Datenbank, `/var/lib/heimdal-kdc/heimdal.db` und der Master-Schlüssel `/var/lib/heimdal-kdc/m-key` müssen in den gleichen Pfaden auf dem Slave installiert sein. Die Keytab Datei muss auf dem Replica-Server unter `/etc/krb5.keytab` hinterlegt sein. 
 
 In `/etc/heimdal-kdc/kdc.conf` müssen Port 88 und 754 geöffnet sein. Dies wird unter `[kdc]` festgelegt mit
 ```s
@@ -160,7 +161,9 @@ Port 88 dient zur Kerberos Authentifikation und Port 754 für die Propagation de
 
 Dann kann durch einen Befehl auf dem Master die Propagation initalisiert werden.
 ```s
-hprop -k /etc/hprop.keytab $REPLICA_FQDN
+sudo hprop -k /etc/hprop.keytab $REPLICA_FQDN
+sudo chown root:root /etc/krb5.keytab (replica)
+sudo reboot (both machines)
 ```
 
 Der Hostname des Replica muss mit dem DNS-Eintrag übereinstimmen. 
@@ -202,6 +205,11 @@ Python Onboarding Skript ausführen
 /onboarding/cross-realm/python_script.sh
 
 **Zu beachten ist, dass der Nutzer die Notwendigen Rechte auf venv und andere Ordner haben muss. Das Skript python_script.sh soll hier ohne sudo ausgeführt werden.**
+Dann muss das admin.keytab eingerichtet werden. 
+
+````s 
+sudo kadmin -l ext -k py/admin.keytab admin/admin
+```
 
 Normalerweise sollte das ausreichen. Sonst die nötigen Dateien hinzufügen:
 ```
